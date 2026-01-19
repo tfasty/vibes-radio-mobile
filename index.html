@@ -1,0 +1,2359 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Vibes Radio">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#667eea">
+    
+    <title>Vibes Radio Mobile v1.2 - App 🎵</title>
+    
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        :root {
+            /* Winter (default) */
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --accent: #f093fb;
+            --bg-start: #4a5bc5;
+            --bg-end: #5a3880;
+        }
+        
+        body.winter {
+            --primary: #4facfe;
+            --secondary: #00f2fe;
+            --accent: #43e97b;
+            --bg-start: #4a5bc5;
+            --bg-end: #5a3880;
+        }
+        
+        body.spring {
+            --primary: #fa709a;
+            --secondary: #fee140;
+            --accent: #30cfd0;
+            --bg-start: #9a3d5a;
+            --bg-end: #a67920;
+        }
+        
+        body.summer {
+            --primary: #fdbb2d;
+            --secondary: #22c1c3;
+            --accent: #f093fb;
+            --bg-start: #c88f1f;
+            --bg-end: #2a4a60;
+        }
+        
+        body.autumn {
+            --primary: #ee0979;
+            --secondary: #ff6a00;
+            --accent: #f5af19;
+            --bg-start: #8a0548;
+            --bg-end: #994000;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+            background-attachment: fixed;
+            min-height: 100vh;
+            height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            overflow-y: hidden;
+            position: fixed;
+            padding-bottom: 0;
+            width: 100%;
+        }
+        
+        /* Mode Performance */
+        body.performance-mode * {
+            animation: none !important;
+            transition: none !important;
+        }
+        
+        body.performance-mode .vinyl-circle.playing {
+            animation: none !important;
+        }
+        
+        /* HEADER MOBILE */
+        .header {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .season-indicator {
+            font-size: 1.8rem;
+        }
+        
+        /* SCREENS */
+        .screen {
+            display: none;
+            padding: 20px;
+            height: calc(100vh - 140px);
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .screen.active {
+            display: block;
+        }
+        
+        /* ===== PAGE D'ACCUEIL - STYLE VIDÉO ===== */
+        
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 50px 20px 40px;
+        }
+        
+        .hero-emoji {
+            font-size: 5.5rem;
+            display: block;
+            margin-bottom: 20px;
+        }
+        
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+        
+        /* Section avec emoji géant */
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section-emoji {
+            font-size: 4rem;
+            text-align: center;
+            display: block;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        /* Card style vidéo */
+        .video-card {
+            background: rgba(255, 255, 255, 0.15);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 30px 25px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .video-card p {
+            text-align: center;
+            line-height: 1.7;
+            font-size: 1rem;
+            opacity: 0.95;
+        }
+        
+        /* Subsections */
+        .subsection {
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .subsection-emoji {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 15px;
+        }
+        
+        .subsection-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .subsection-desc {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        /* Stats Grid - Style Vidéo */
+        .stats-grid-video {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .stat-box {
+            background: rgba(255, 255, 255, 0.15);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 35px 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .stat-number-big {
+            font-size: 3.5rem;
+            font-weight: 900;
+            display: block;
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+        
+        .stat-label-caps {
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+        
+        /* Steps List */
+        .steps-list {
+            list-style: none;
+        }
+        
+        .step-item {
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+        
+        .step-number {
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .step-desc {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        /* Version badge dans hero */
+        .version-badge {
+            background: rgba(255, 255, 255, 0.15);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 12px 20px;
+            margin: 20px auto 0;
+            max-width: 320px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .version-badge p:first-child {
+            font-size: 0.9rem;
+            margin: 0;
+        }
+        
+        .version-badge p:last-child {
+            font-size: 0.85rem;
+            margin: 5px 0 0 0;
+            opacity: 0.9;
+        }
+        
+        /* Titre avec emoji dans card */
+        .card-title-centered {
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .card-text-spaced {
+            margin-bottom: 20px;
+        }
+        
+        .card-text-bold {
+            font-weight: 600;
+        }
+        
+        /* Update version badge */
+        .update-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .update-version-badge {
+            background: var(--accent);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.95rem;
+        }
+        
+        .update-date-text {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        .update-content-text {
+            text-align: left;
+        }
+
+        /* HOME SCREEN - PLAYER CIRCULAIRE (maintenant sur page Player) */
+        .player-circle-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        
+        .vinyl-circle {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+            -webkit-backdrop-filter: blur(30px);
+            backdrop-filter: blur(30px);
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .vinyl-circle.playing {
+            animation: spinVinyl 3s linear infinite;
+        }
+        
+        @keyframes spinVinyl {
+            to { transform: rotate(360deg); }
+        }
+        
+        .vinyl-inner {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .track-info {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .track-name {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .track-genre {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+        
+        .player-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .control-btn {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .control-btn:active {
+            transform: scale(0.9);
+        }
+        
+        .play-btn-main {
+            width: 85px;
+            height: 85px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            font-size: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .volume-container {
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        
+        .volume-slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Copyright Notice */
+        .copyright-notice {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .copyright-notice p {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin: 4px 0;
+            line-height: 1.5;
+        }
+        
+        .copyright-notice p:first-child {
+            font-weight: 600;
+        }
+        
+        /* RADIOS SCREEN - CARDS HORIZONTALES */
+        .radios-header {
+            margin-bottom: 20px;
+        }
+        
+        /* Alert Popup */
+        .alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .alert-box {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 24px;
+            padding: 35px 28px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            animation: slideUp 0.4s ease;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px) scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .alert-icon {
+            font-size: 4.5rem;
+            margin-bottom: 20px;
+            display: block;
+            animation: bounce 1s ease infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .alert-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .alert-message {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 28px;
+            color: rgba(255, 255, 255, 0.95);
+            text-align: left;
+        }
+        
+        .alert-message strong {
+            color: white;
+            font-weight: 700;
+        }
+        
+        .alert-btn {
+            background: white;
+            color: var(--primary);
+            border: none;
+            border-radius: 50px;
+            padding: 16px 50px;
+            font-size: 1.05rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s ease;
+        }
+        
+        .alert-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .search-bar {
+            background: rgba(255, 255, 255, 0.15);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        
+        .search-input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+        
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .filters-scroll {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .filter-chip {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            border: 2px solid transparent;
+            font-size: 0.95rem;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-chip.active {
+            background: white;
+            color: var(--primary);
+            border-color: white;
+        }
+        
+        .radio-card {
+            background: rgba(255, 255, 255, 0.15);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .radio-card:active {
+            transform: scale(0.98);
+        }
+        
+        .radio-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            flex-shrink: 0;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .radio-info {
+            flex: 1;
+        }
+        
+        .radio-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .radio-genre {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .favorite-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .favorite-btn.active {
+            background: #ff6b6b;
+            transform: scale(1.1);
+        }
+        
+        /* SETTINGS */
+        .settings-section {
+            margin-bottom: 30px;
+        }
+        
+        .settings-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .settings-group {
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .setting-item {
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-item:active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .setting-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .setting-icon {
+            font-size: 1.5rem;
+        }
+        
+        .setting-text {
+            flex: 1;
+        }
+        
+        .setting-name {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+        
+        .setting-desc {
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+        
+        .toggle-switch {
+            width: 50px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .toggle-switch.active {
+            background: var(--accent);
+        }
+        
+        .toggle-slider {
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(22px);
+        }
+        
+        .season-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            padding: 15px;
+        }
+        
+        .season-option {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            text-align: center;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .season-option.active {
+            border-color: white;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .season-emoji {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .season-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        /* BOTTOM NAV - 5 BOUTONS */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.15);
+            -webkit-backdrop-filter: blur(30px);
+            backdrop-filter: blur(30px);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            padding: 10px 0;
+            z-index: 1000;
+        }
+        
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            padding: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn.active {
+            color: white;
+        }
+        
+        .nav-icon {
+            font-size: 1.5rem;
+        }
+        
+        .nav-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 380px) {
+            .hero-emoji {
+                font-size: 4.5rem;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-emoji {
+                font-size: 3.5rem;
+            }
+            
+            .nav-label {
+                font-size: 0.65rem;
+            }
+        }
+    </style>
+</head>
+<body class="winter">
+    
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo" id="logoElement">
+            🎵 Vibes Radio
+        </div>
+        <div class="season-indicator" id="seasonEmoji">❄️</div>
+    </div>
+    
+    <!-- SCREEN: HOME - STYLE VIDÉO -->
+    <div class="screen active" id="homeScreen">
+        <!-- Hero -->
+        <div class="hero-section">
+            <span class="hero-emoji">🎧</span>
+            <h1 class="hero-title">Vibes Radio</h1>
+            <p class="hero-subtitle">Écoutez le monde 🌍</p>
+            <div class="version-badge">
+                <p><strong>📱 Application Mobile</strong></p>
+                <p>Pour PC, rendez-vous sur tfasty.github.io ⬇️</p>
+            </div>
+        </div>
+        
+        <!-- Bienvenue -->
+        <div class="section">
+            <div class="video-card">
+                <h2 class="card-title-centered">✨ Bienvenue !</h2>
+                <p class="card-text-spaced">Merci d'avoir choisi Vibes Radio ! Une application créée avec ❤️ pour tous les amoureux de la radio du monde entier.</p>
+                <p class="card-text-bold">👏 Un grand merci à vous pour votre soutien et votre écoute !</p>
+            </div>
+        </div>
+        
+        <!-- Qu'est-ce que Vibes Radio -->
+        <div class="section">
+            <span class="section-emoji">📻</span>
+            <h2 class="section-title">Qu'est-ce que Vibes Radio ?</h2>
+            
+            <div class="subsection">
+                <span class="subsection-emoji">🌍</span>
+                <h3 class="subsection-title">Radios du monde</h3>
+                <p class="subsection-desc">29 radios actives de 8 pays + 6 radios saisonnières (Noël)</p>
+            </div>
+            
+            <div class="subsection">
+                <span class="subsection-emoji">🎨</span>
+                <h3 class="subsection-title">Design unique</h3>
+                <p class="subsection-desc">Interface moderne avec 4 thèmes saisonniers immersifs</p>
+            </div>
+            
+            <div class="subsection">
+                <span class="subsection-emoji">💻</span>
+                <h3 class="subsection-title">Multi-plateforme</h3>
+                <p class="subsection-desc">App mobile (smartphone & tablette)<br>Version PC séparée disponible sur<br><a href="https://tfasty.github.io/winter-vibes-radio/" target="_blank" style="color: white; text-decoration: underline; font-weight: 600;">tfasty.github.io</a></p>
+            </div>
+            
+            <div class="subsection">
+                <span class="subsection-emoji">🎁</span>
+                <h3 class="subsection-title">Easter Eggs</h3>
+                <p class="subsection-desc">Découvrez 8 surprises cachées dans l'application</p>
+            </div>
+        </div>
+        
+        <!-- En chiffres -->
+        <div class="section">
+            <span class="section-emoji">📊</span>
+            <h2 class="section-title">En chiffres</h2>
+            
+            <div class="stats-grid-video">
+                <div class="stat-box">
+                    <span class="stat-number-big" id="totalRadios">29</span>
+                    <span class="stat-label-caps">RADIOS</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number-big">8</span>
+                    <span class="stat-label-caps">PAYS</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number-big" id="easterEggsFound">8</span>
+                    <span class="stat-label-caps">EASTER EGGS</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number-big">4</span>
+                    <span class="stat-label-caps">THÈMES</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Comment ça marche -->
+        <div class="section">
+            <span class="section-emoji">❓</span>
+            <h2 class="section-title">Comment ça marche ?</h2>
+            
+            <ul class="steps-list">
+                <li class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <div class="step-title">📻 Choisir une radio</div>
+                        <div class="step-desc">Parcourez 29 radios actives de 8 pays. Filtrez par pays ! (6 radios de Noël disponibles en décembre)</div>
+                    </div>
+                </li>
+                
+                <li class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <div class="step-title">🎵 Écouter</div>
+                        <div class="step-desc">Cliquez sur le bouton play d'une radio. Le player se lance automatiquement.</div>
+                    </div>
+                </li>
+                
+                <li class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <div class="step-title">🎨 Personnaliser</div>
+                        <div class="step-desc">Changez de saison pour modifier l'ambiance : Hiver ❄️, Printemps 🌸, Été ☀️ ou Automne 🍂 !</div>
+                    </div>
+                </li>
+                
+                <li class="step-item">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <div class="step-title">🎁 Explorer</div>
+                        <div class="step-desc">Cherchez les easter eggs cachés dans l'app pour débloquer des surprises !</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Mises à jour -->
+        <div class="section">
+            <span class="section-emoji">🚀</span>
+            <h2 class="section-title">Mises à jour</h2>
+            
+            <div class="subsection">
+                <div class="update-header">
+                    <span class="update-version-badge">v1.2 Mobile</span>
+                    <span class="update-date-text">📅 19 Janvier 2026</span>
+                </div>
+                <div class="subsection-desc update-content-text">
+                    🔒 Radios saisonnières (Noël verrouillées)<br>
+                    🎁 Nouvelle section "Extra" dans Paramètres<br>
+                    🔄 Bouton reset alerte radios<br>
+                    🗑️ Bouton effacer favoris<br>
+                    🎮 Bouton reset Easter Eggs<br>
+                    ⚠️ Bouton réinitialisation complète<br>
+                    🔊 Sons améliorés (plus doux et graves)<br>
+                    📊 31 radios actives + 7 saisonnières
+                </div>
+            </div>
+            
+            <div class="subsection">
+                <div class="update-header">
+                    <span class="update-version-badge" style="background: rgba(255,255,255,0.3);">v1.1 Mobile</span>
+                    <span class="update-date-text">📅 15 Janvier 2026</span>
+                </div>
+                <div class="subsection-desc update-content-text">
+                    ✨ Page d'accueil redesignée<br>
+                    ⚡ Mode Performance ajouté<br>
+                    🎯 Navigation optimisée (5 onglets)<br>
+                    🌈 Thèmes plus foncés et lisibles<br>
+                    🎁 8 Easter Eggs au total<br>
+                    💻 Lien vers version PC ajouté
+                </div>
+            </div>
+            
+            <div class="subsection">
+                <div class="update-header">
+                    <span class="update-version-badge" style="background: rgba(255,255,255,0.3);">v1.0 Mobile</span>
+                    <span class="update-date-text">📅 13 Janvier 2026</span>
+                </div>
+                <div class="subsection-desc update-content-text">
+                    🎉 Lancement version mobile<br>
+                    📻 38 radios de 8 pays<br>
+                    🎵 Player circulaire animé<br>
+                    🎁 8 Easter Eggs cachés<br>
+                    🌈 4 thèmes saisonniers automatiques<br>
+                    💾 Système de favoris persistent<br>
+                    📱 Application PWA optimisée mobile
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- SCREEN: PLAYER -->
+    <div class="screen" id="playerScreen">
+        <div class="player-circle-container">
+            <div class="vinyl-circle" id="vinylCircle">
+                <div class="vinyl-inner" id="vinylEmoji">🎵</div>
+            </div>
+            
+            <div class="track-info">
+                <div class="track-name" id="trackName">Sélectionnez une radio</div>
+                <div class="track-genre" id="trackGenre">Parcourez les radios disponibles</div>
+            </div>
+            
+            <div class="player-controls">
+                <button class="control-btn" id="prevBtn">⏮️</button>
+                <button class="control-btn play-btn-main" id="playBtn">▶️</button>
+                <button class="control-btn" id="nextBtn">⏭️</button>
+            </div>
+            
+            <div class="volume-container">
+                <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="70">
+            </div>
+            
+            <div class="copyright-notice">
+                <p>⚠️ Les radios diffusées sont la propriété de leurs diffuseurs respectifs.</p>
+                <p>Vibes Radio ne détient aucun droit sur le contenu audio.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- SCREEN: RADIOS -->
+    <div class="screen" id="radiosScreen">
+        <div class="radios-header">
+            <div class="search-bar">
+                <span style="font-size: 1.2rem;">🔍</span>
+                <input type="text" class="search-input" placeholder="Rechercher une radio..." id="searchInput">
+            </div>
+            
+            <div class="filters-scroll" id="filtersContainer">
+                <div class="filter-chip active" data-country="all">🌍 Tout</div>
+                <div class="filter-chip" data-country="France">🇫🇷 France</div>
+                <div class="filter-chip" data-country="English">🇬🇧 English</div>
+                <div class="filter-chip" data-country="Allemagne">🇩🇪 Allemagne</div>
+                <div class="filter-chip" data-country="Italie">🇮🇹 Italie</div>
+                <div class="filter-chip" data-country="Belgique">🇧🇪 Belgique</div>
+                <div class="filter-chip" data-country="Maroc">🇲🇦 Maroc</div>
+                <div class="filter-chip" data-country="Espagne">🇪🇸 Espagne</div>
+                <div class="filter-chip" data-country="Japon">🇯🇵 Japon</div>
+            </div>
+        </div>
+        
+        <div id="radiosContainer"></div>
+    </div>
+    
+    <!-- SCREEN: FAVORITES -->
+    <div class="screen" id="favoritesScreen">
+        <h2 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 20px;">❤️ Mes Favoris</h2>
+        <div id="favoritesContainer"></div>
+    </div>
+    
+    <!-- SCREEN: SETTINGS -->
+    <div class="screen" id="settingsScreen">
+        <div class="settings-section">
+            <h3 class="settings-title">🌈 Apparence</h3>
+            <div class="settings-group">
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <span class="setting-icon">🎨</span>
+                        <div class="setting-text">
+                            <div class="setting-name">Thème saisonnier</div>
+                            <div class="setting-desc">Changement automatique</div>
+                        </div>
+                    </div>
+                    <div class="toggle-switch active" id="seasonalThemeToggle">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="season-selector" id="seasonSelector" style="display: none;">
+                <div class="season-option" data-season="winter">
+                    <span class="season-emoji">❄️</span>
+                    <div class="season-name">Hiver</div>
+                </div>
+                <div class="season-option" data-season="spring">
+                    <span class="season-emoji">🌸</span>
+                    <div class="season-name">Printemps</div>
+                </div>
+                <div class="season-option" data-season="summer">
+                    <span class="season-emoji">☀️</span>
+                    <div class="season-name">Été</div>
+                </div>
+                <div class="season-option" data-season="autumn">
+                    <span class="season-emoji">🍂</span>
+                    <div class="season-name">Automne</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="settings-section">
+            <h3 class="settings-title">⚡ Performance</h3>
+            <div class="settings-group">
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <span class="setting-icon">🚀</span>
+                        <div class="setting-text">
+                            <div class="setting-name">Mode Performance</div>
+                            <div class="setting-desc">Désactive les animations</div>
+                        </div>
+                    </div>
+                    <div class="toggle-switch" id="performanceModeToggle">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="settings-section">
+            <h3 class="settings-title">🎁 Extra</h3>
+            <div class="settings-group">
+                <div class="setting-item" id="resetAlertBtn" style="cursor: pointer;">
+                    <div class="setting-label">
+                        <span class="setting-icon">🔄</span>
+                        <div class="setting-text">
+                            <div class="setting-name">Réafficher l'alerte Radios</div>
+                            <div class="setting-desc">Voir à nouveau le message d'info</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-item" id="clearFavoritesBtn" style="cursor: pointer;">
+                    <div class="setting-label">
+                        <span class="setting-icon">🗑️</span>
+                        <div class="setting-text">
+                            <div class="setting-name">Effacer les favoris</div>
+                            <div class="setting-desc">Supprimer toutes les radios favorites</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-item" id="resetEasterEggsBtn" style="cursor: pointer;">
+                    <div class="setting-label">
+                        <span class="setting-icon">🎮</span>
+                        <div class="setting-text">
+                            <div class="setting-name">Reset Easter Eggs</div>
+                            <div class="setting-desc">Recommencer la chasse aux œufs</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-item" id="resetAllBtn" style="cursor: pointer;">
+                    <div class="setting-label">
+                        <span class="setting-icon">⚠️</span>
+                        <div class="setting-text">
+                            <div class="setting-name">Réinitialiser l'application</div>
+                            <div class="setting-desc">Effacer toutes les données</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="settings-section">
+            <h3 class="settings-title">ℹ️ Informations</h3>
+            <div class="settings-group">
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <span class="setting-icon">📱</span>
+                        <div class="setting-text">
+                            <div class="setting-name">Version</div>
+                            <div class="setting-desc">1.2</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <span class="setting-icon">🎁</span>
+                        <div class="setting-text">
+                            <div class="setting-name">Easter Eggs</div>
+                            <div class="setting-desc" id="easterEggsCount">0/8 trouvés</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- BOTTOM NAV - 5 BOUTONS -->
+    <div class="bottom-nav">
+        <button class="nav-btn active" onclick="showScreen('homeScreen')">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-label">Accueil</span>
+        </button>
+        <button class="nav-btn" onclick="showScreen('playerScreen')">
+            <span class="nav-icon">🎵</span>
+            <span class="nav-label">Player</span>
+        </button>
+        <button class="nav-btn" onclick="showScreen('radiosScreen')">
+            <span class="nav-icon">📻</span>
+            <span class="nav-label">Radios</span>
+        </button>
+        <button class="nav-btn" onclick="showScreen('favoritesScreen')">
+            <span class="nav-icon">❤️</span>
+            <span class="nav-label">Favoris</span>
+        </button>
+        <button class="nav-btn" onclick="showScreen('settingsScreen')">
+            <span class="nav-icon">⚙️</span>
+            <span class="nav-label">Réglages</span>
+        </button>
+    </div>
+    
+    <!-- Audio Element -->
+    <audio id="audioPlayer"></audio>
+    
+    <script>
+        // ===== CONFIGURATION =====
+        const RADIOS = [
+            // 🇫🇷 FRANCE
+            { name: 'FIP', url: 'https://icecast.radiofrance.fr/fip-midfi.mp3', country: 'France', genre: 'Eclectic', emoji: '🎨', locked: false },
+            { name: 'Noël Radio', url: 'https://noel.ice.infomaniak.ch/noel-128.mp3', country: 'France', genre: 'Noël', emoji: '🎄', locked: true },
+            { name: 'TSF Jazz', url: 'https://tsfjazz.ice.infomaniak.ch/tsfjazz-high.mp3', country: 'France', genre: 'Jazz', emoji: '🎷', locked: false },
+            { name: 'France Musique', url: 'https://icecast.radiofrance.fr/francemusique-midfi.mp3', country: 'France', genre: 'Classique', emoji: '🎻', locked: false },
+            { name: 'FIP Electro', url: 'https://icecast.radiofrance.fr/fipelectro-midfi.mp3', country: 'France', genre: 'Electro', emoji: '⚡', locked: false },
+            { name: 'FIP Rock', url: 'https://icecast.radiofrance.fr/fiprock-midfi.mp3', country: 'France', genre: 'Rock', emoji: '🎸', locked: false },
+            { name: 'Skyrock', url: 'https://icecast.skyrock.net/s/natio_mp3_128k', country: 'France', genre: 'Hip-Hop', emoji: '🎤', locked: false },
+            { name: 'FIP Groove', url: 'https://icecast.radiofrance.fr/fipgroove-midfi.mp3', country: 'France', genre: 'Groove', emoji: '🎵', locked: false },
+            { name: 'J-Pop Powerplay', url: 'https://kathy.torontocast.com:3060/stream', country: 'France', genre: 'J-Pop', emoji: '🎌', locked: false },
+            
+            // 🇬🇧 ENGLISH
+            { name: 'Christmas UK', url: 'https://stream-mz.planetradio.co.uk/christmashq.mp3', country: 'English', genre: 'Christmas', emoji: '🎅', locked: true },
+            { name: 'Heart Radio', url: 'https://media-ssl.musicradio.com/HeartLondonMP3', country: 'English', genre: 'Pop', emoji: '❤️', locked: false },
+            { name: 'Smooth FM', url: 'https://media-ssl.musicradio.com/SmoothLondonMP3', country: 'English', genre: 'Smooth', emoji: '🎵', locked: false },
+            
+            // 🇩🇪 ALLEMAGNE
+            { name: 'I Love Chill', url: 'https://streams.ilovemusic.de/iloveradio17.mp3', country: 'Allemagne', genre: 'Chill', emoji: '😌', locked: false },
+            { name: 'I Love Musique', url: 'https://streams.ilovemusic.de/iloveradio36.mp3', country: 'Allemagne', genre: 'Pop', emoji: '🎵', locked: false },
+            { name: 'I Love Jazz', url: 'https://streams.ilovemusic.de/iloveradio26.mp3', country: 'Allemagne', genre: 'Jazz', emoji: '🎷', locked: false },
+            { name: 'I Love Relax', url: 'https://streams.ilovemusic.de/iloveradio18.mp3', country: 'Allemagne', genre: 'Relax', emoji: '🧘', locked: false },
+            { name: 'I Love Dance', url: 'https://streams.ilovemusic.de/iloveradio2.mp3', country: 'Allemagne', genre: 'Dance', emoji: '💃', locked: false },
+            { name: 'I Love Rock', url: 'https://streams.ilovemusic.de/iloveradio8.mp3', country: 'Allemagne', genre: 'Rock', emoji: '🎸', locked: false },
+            { name: 'I Love Radio', url: 'https://streams.ilovemusic.de/iloveradio1.mp3', country: 'Allemagne', genre: 'Pop', emoji: '📻', locked: false },
+            { name: 'I Love Lounge', url: 'https://streams.ilovemusic.de/iloveradio24.mp3', country: 'Allemagne', genre: 'Lounge', emoji: '🍸', locked: false },
+            { name: 'Anime DE', url: 'https://stream.laut.fm/anime', country: 'Allemagne', genre: 'Anime', emoji: '🎌', locked: false },
+            
+            // 🇮🇹 ITALIE
+            { name: 'Natale', url: 'https://stream.zeno.fm/w0ty48rqcm0uv', country: 'Italie', genre: 'Natale', emoji: '🎄', locked: true },
+            { name: 'Radio Monte Carlo', url: 'https://icy.unitedradio.it/RMC.mp3', country: 'Italie', genre: 'Pop', emoji: '🎵', locked: false },
+            { name: 'Virgin Radio', url: 'https://icestreaming.rai.it/5.mp3', country: 'Italie', genre: 'Rock', emoji: '🎸', locked: false },
+            { name: 'Radio 105', url: 'https://icestreaming.rai.it/1.mp3', country: 'Italie', genre: 'Dance', emoji: '🎉', locked: false },
+            
+            // 🇧🇪 BELGIQUE
+            { name: 'Noël BE', url: 'https://noel.ice.infomaniak.ch/noel-128.mp3', country: 'Belgique', genre: 'Noël', emoji: '🎅', locked: true },
+            { name: 'Jazz Radio BE', url: 'https://jazzradio.ice.infomaniak.ch/jazzradio-high.mp3', country: 'Belgique', genre: 'Jazz', emoji: '🎷', locked: false },
+            { name: 'Anime BE', url: 'https://stream.laut.fm/anime', country: 'Belgique', genre: 'Anime', emoji: '🎌', locked: false },
+            
+            // 🇲🇦 MAROC
+            { name: 'Noël MA', url: 'https://noel.ice.infomaniak.ch/noel-128.mp3', country: 'Maroc', genre: 'Noël', emoji: '🎄', locked: true },
+            { name: 'Jazz MA', url: 'https://jazzradio.ice.infomaniak.ch/jazzradio-high.mp3', country: 'Maroc', genre: 'Jazz', emoji: '🎷', locked: false },
+            
+            // 🇪🇸 ESPAGNE
+            { name: 'Navidad', url: 'https://stream.zeno.fm/w0ty48rqcm0uv', country: 'Espagne', genre: 'Navidad', emoji: '🎅', locked: true },
+            { name: 'Jazz ES', url: 'https://jazzradio.ice.infomaniak.ch/jazzradio-high.mp3', country: 'Espagne', genre: 'Jazz', emoji: '🎷', locked: false },
+            { name: 'Los 40', url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/LOS40.mp3', country: 'Espagne', genre: 'Pop', emoji: '💯', locked: false },
+            { name: 'Anime ES', url: 'https://stream.laut.fm/anime', country: 'Espagne', genre: 'Anime', emoji: '🎌', locked: false },
+            
+            // 🇯🇵 JAPON
+            { name: 'Listen.moe', url: 'https://listen.moe/stream', country: 'Japon', genre: 'J-Pop/Anime', emoji: '🎌', locked: false }
+        ];
+        
+        let currentRadioIndex = -1;
+        let isPlaying = false;
+        let favorites = JSON.parse(localStorage.getItem('vibes_favorites')) || [];
+        let currentCountry = 'all';
+        let currentGenre = 'all';
+        
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playBtn = document.getElementById('playBtn');
+        const vinylCircle = document.getElementById('vinylCircle');
+        const trackName = document.getElementById('trackName');
+        const trackGenre = document.getElementById('trackGenre');
+        const vinylEmoji = document.getElementById('vinylEmoji');
+        
+        // ===== EASTER EGGS =====
+        let EASTER_EGGS_FOUND = JSON.parse(localStorage.getItem('vibes_easter_eggs')) || {
+            confetti: false,
+            shake: false,
+            djMode: false,
+            secretRadio: false,
+            rainbow: false,
+            list: false,
+            double: false,
+            konami: false
+        };
+        
+        function markEasterEggFound(eggName) {
+            if (!EASTER_EGGS_FOUND[eggName]) {
+                EASTER_EGGS_FOUND[eggName] = true;
+                localStorage.setItem('vibes_easter_eggs', JSON.stringify(EASTER_EGGS_FOUND));
+                updateEasterEggsCount();
+                showToast(`🎉 Easter Egg trouvé : ${eggName}!`);
+            }
+        }
+        
+        function updateEasterEggsCount() {
+            const count = Object.values(EASTER_EGGS_FOUND).filter(v => v).length;
+            const easterEggsCountEl = document.getElementById('easterEggsCount');
+            const easterEggsFoundEl = document.getElementById('easterEggsFound');
+            if (easterEggsCountEl) easterEggsCountEl.textContent = `${count}/8 trouvés`;
+            if (easterEggsFoundEl) easterEggsFoundEl.textContent = count;
+        }
+        
+        // Easter Egg: Triple tap sur logo
+        let logoTapCount = 0;
+        let logoTapTimer = null;
+        document.getElementById('logoElement').addEventListener('click', () => {
+            logoTapCount++;
+            if (logoTapTimer) clearTimeout(logoTapTimer);
+            
+            if (logoTapCount === 3) {
+                triggerConfetti();
+                markEasterEggFound('confetti');
+                logoTapCount = 0;
+            }
+            
+            logoTapTimer = setTimeout(() => {
+                logoTapCount = 0;
+            }, 500);
+        });
+        
+        // Easter Egg: Long press sur emoji saison
+        let seasonLongPressTimer = null;
+        document.getElementById('seasonEmoji').addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            seasonLongPressTimer = setTimeout(() => {
+                triggerShakeEffect();
+                markEasterEggFound('shake');
+            }, 3000);
+        });
+        
+        document.getElementById('seasonEmoji').addEventListener('touchend', () => {
+            if (seasonLongPressTimer) clearTimeout(seasonLongPressTimer);
+        });
+        
+        // Easter Egg: Long press sur vinyl
+        let vinylLongPressTimer = null;
+        vinylCircle.addEventListener('touchstart', () => {
+            vinylLongPressTimer = setTimeout(() => {
+                triggerDJMode();
+                markEasterEggFound('djMode');
+            }, 2000);
+        });
+        
+        vinylCircle.addEventListener('touchend', () => {
+            if (vinylLongPressTimer) clearTimeout(vinylLongPressTimer);
+        });
+        
+        // Easter Egg: Swipe down sur page radios
+        let swipeDownCount = 0;
+        let startY = 0;
+        document.getElementById('radiosScreen').addEventListener('touchstart', (e) => {
+            startY = e.touches[0].clientY;
+        });
+        
+        document.getElementById('radiosScreen').addEventListener('touchend', (e) => {
+            const endY = e.changedTouches[0].clientY;
+            if (endY - startY > 100) {
+                swipeDownCount++;
+                if (swipeDownCount >= 5) {
+                    addSecretRadio();
+                    markEasterEggFound('secretRadio');
+                    swipeDownCount = 0;
+                }
+            }
+        });
+        
+        // Easter Egg: Double tap sur emoji saison
+        let seasonDoubleTapTimer = null;
+        let seasonTapCount = 0;
+        document.getElementById('seasonEmoji').addEventListener('click', () => {
+            seasonTapCount++;
+            if (seasonDoubleTapTimer) clearTimeout(seasonDoubleTapTimer);
+            
+            if (seasonTapCount === 2) {
+                toggleRainbowMode();
+                markEasterEggFound('rainbow');
+                seasonTapCount = 0;
+            }
+            
+            seasonDoubleTapTimer = setTimeout(() => {
+                seasonTapCount = 0;
+            }, 500);
+        });
+        
+        // Easter Egg: Recherche "VIBES"
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            if (e.target.value.toUpperCase() === 'VIBES') {
+                showAllEasterEggs();
+                e.target.value = '';
+            }
+        });
+        
+        // Easter Egg 7: Double tap rapide sur le header "Vibes Radio"
+        let headerTapCount = 0;
+        let headerTapTimer = null;
+        document.querySelector('.logo').addEventListener('click', () => {
+            headerTapCount++;
+            if (headerTapTimer) clearTimeout(headerTapTimer);
+            
+            if (headerTapCount === 2) {
+                triggerPartyMode();
+                markEasterEggFound('double');
+                headerTapCount = 0;
+            }
+            
+            headerTapTimer = setTimeout(() => {
+                headerTapCount = 0;
+            }, 500);
+        });
+        
+        // Easter Egg 8: Konami Code
+        let konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        let konamiIndex = 0;
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === konamiCode[konamiIndex]) {
+                konamiIndex++;
+                if (konamiIndex === konamiCode.length) {
+                    triggerKonamiMode();
+                    markEasterEggFound('konami');
+                    konamiIndex = 0;
+                }
+            } else {
+                konamiIndex = 0;
+            }
+        });
+        
+        function triggerConfetti(count = 100, duration = 3000) {
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.textContent = ['🎉', '🎊', '✨', '⭐', '🌟'][Math.floor(Math.random() * 5)];
+                    confetti.style.position = 'fixed';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.top = '-50px';
+                    confetti.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                    confetti.style.zIndex = '9999';
+                    confetti.style.pointerEvents = 'none';
+                    confetti.style.animation = `fall ${Math.random() * 2 + 2}s linear`;
+                    
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 4000);
+                }, i * (duration / count));
+            }
+            
+            if (!document.getElementById('confetti-animation')) {
+                const style = document.createElement('style');
+                style.id = 'confetti-animation';
+                style.textContent = `
+                    @keyframes fall {
+                        to {
+                            transform: translateY(100vh) rotate(360deg);
+                            opacity: 0;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+        
+        function triggerShakeEffect() {
+            document.body.style.animation = 'shake 0.5s';
+            setTimeout(() => {
+                document.body.style.animation = '';
+            }, 500);
+            
+            if (!document.getElementById('shake-animation')) {
+                const style = document.createElement('style');
+                style.id = 'shake-animation';
+                style.textContent = `
+                    @keyframes shake {
+                        0%, 100% { transform: translateX(0); }
+                        10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+                        20%, 40%, 60%, 80% { transform: translateX(10px); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            showToast('🌈 SHAKE IT! 🌈');
+        }
+        
+        function triggerDJMode() {
+            vinylCircle.style.animation = 'spinVinyl 0.5s linear infinite';
+            setTimeout(() => {
+                vinylCircle.style.animation = isPlaying ? 'spinVinyl 3s linear infinite' : '';
+            }, 5000);
+            showToast('🎵 DJ MODE ACTIVATED! 🎵');
+        }
+        
+        function addSecretRadio() {
+            const secretRadio = {
+                name: '🦄 Unicorn Radio',
+                url: 'https://jazz.ice.infomaniak.ch/jazz-wr03-128.mp3',
+                genre: 'Secret',
+                emoji: '🦄'
+            };
+            
+            if (!RADIOS.find(r => r.name === secretRadio.name)) {
+                RADIOS.push(secretRadio);
+                renderRadios();
+                showToast('🦄 Radio Secrète Débloquée!');
+            }
+        }
+        
+        function toggleRainbowMode() {
+            document.body.style.animation = 'rainbow 3s linear infinite';
+            setTimeout(() => {
+                document.body.style.animation = '';
+            }, 10000);
+            
+            if (!document.getElementById('rainbow-animation')) {
+                const style = document.createElement('style');
+                style.id = 'rainbow-animation';
+                style.textContent = `
+                    @keyframes rainbow {
+                        0%, 100% { filter: hue-rotate(0deg); }
+                        50% { filter: hue-rotate(360deg); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            showToast('🌈 RAINBOW MODE! 🌈');
+        }
+        
+        function triggerKonamiMode() {
+            // Explosion de confettis géante + effet de zoom
+            document.body.style.animation = 'konamiExplosion 1.5s ease-out';
+            
+            setTimeout(() => {
+                document.body.style.animation = '';
+            }, 1500);
+            
+            if (!document.getElementById('konami-animation')) {
+                const style = document.createElement('style');
+                style.id = 'konami-animation';
+                style.textContent = `
+                    @keyframes konamiExplosion {
+                        0% { transform: scale(1); filter: brightness(1) hue-rotate(0deg); }
+                        20% { transform: scale(1.05); filter: brightness(1.5) hue-rotate(60deg); }
+                        40% { transform: scale(0.95); filter: brightness(2) hue-rotate(120deg); }
+                        60% { transform: scale(1.05); filter: brightness(1.5) hue-rotate(180deg); }
+                        80% { transform: scale(0.98); filter: brightness(1.8) hue-rotate(240deg); }
+                        100% { transform: scale(1); filter: brightness(1) hue-rotate(0deg); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            // Explosion de confettis massive
+            triggerConfetti(300, 4000);
+            showToast('🎮 KONAMI CODE ACTIVÉ! 🎮');
+        }
+        
+        function triggerPartyMode() {
+            // Rotation + confetti + couleurs changeantes
+            document.body.style.animation = 'party 2s ease-in-out';
+            
+            setTimeout(() => {
+                document.body.style.animation = '';
+            }, 2000);
+            
+            if (!document.getElementById('party-animation')) {
+                const style = document.createElement('style');
+                style.id = 'party-animation';
+                style.textContent = `
+                    @keyframes party {
+                        0% { transform: rotate(0deg); filter: hue-rotate(0deg); }
+                        25% { transform: rotate(5deg); filter: hue-rotate(90deg); }
+                        50% { transform: rotate(0deg); filter: hue-rotate(180deg); }
+                        75% { transform: rotate(-5deg); filter: hue-rotate(270deg); }
+                        100% { transform: rotate(0deg); filter: hue-rotate(360deg); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            triggerConfetti(150, 3000);
+            showToast('🎉 PARTY MODE! 🎊');
+        }
+        
+        function showAllEasterEggs() {
+            const overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.background = 'rgba(0, 0, 0, 0.9)';
+            overlay.style.zIndex = '9999';
+            overlay.style.display = 'flex';
+            overlay.style.alignItems = 'center';
+            overlay.style.justifyContent = 'center';
+            overlay.style.padding = '20px';
+            
+            const popup = document.createElement('div');
+            popup.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            popup.style.borderRadius = '24px';
+            popup.style.padding = '0';
+            popup.style.maxWidth = '400px';
+            popup.style.width = '100%';
+            popup.style.boxShadow = '0 30px 80px rgba(0,0,0,0.5)';
+            popup.style.overflow = 'hidden';
+            popup.style.maxHeight = '85vh';
+            popup.style.position = 'relative';
+            
+            const header = document.createElement('div');
+            header.style.background = 'rgba(255, 255, 255, 0.15)';
+            header.style.padding = '24px';
+            header.style.textAlign = 'center';
+            header.style.borderBottom = '2px solid rgba(255, 255, 255, 0.2)';
+            header.innerHTML = '<div style="font-size: 3rem; margin-bottom: 8px;">🎁</div><h2 style="margin: 0; color: white; font-size: 1.5rem; font-weight: 800;">EASTER EGGS</h2><p style="margin: 8px 0 0 0; color: rgba(255,255,255,0.8); font-size: 0.9rem;">Vibes Radio Secrets</p>';
+            
+            const content = document.createElement('div');
+            content.style.padding = '24px';
+            content.style.color = 'white';
+            content.style.maxHeight = 'calc(85vh - 200px)';
+            content.style.overflowY = 'auto';
+            content.style.overflowX = 'hidden';
+            content.style.webkitOverflowScrolling = 'touch';
+            
+            const eggs = [
+                { emoji: '🎂', title: 'Confetti Party', desc: 'Triple tap sur le logo', found: EASTER_EGGS_FOUND.confetti },
+                { emoji: '🌈', title: 'Shake It', desc: 'Secoue ton téléphone 3x', found: EASTER_EGGS_FOUND.shake },
+                { emoji: '🎵', title: 'DJ Mode', desc: 'Appui long sur le vinyl (2s)', found: EASTER_EGGS_FOUND.djMode },
+                { emoji: '🦄', title: 'Radio Secrète', desc: 'Swipe down 5x (page Radios)', found: EASTER_EGGS_FOUND.secretRadio },
+                { emoji: '🌈', title: 'Rainbow Mode', desc: 'Double tap saison active', found: EASTER_EGGS_FOUND.rainbow },
+                { emoji: '🎁', title: 'Ce Message', desc: 'Tape "VIBES" dans recherche', found: EASTER_EGGS_FOUND.list },
+                { emoji: '🎉', title: 'Party Mode', desc: 'Double tap sur "Vibes Radio"', found: EASTER_EGGS_FOUND.double },
+                { emoji: '🎮', title: 'Konami Code', desc: '↑↑↓↓←→←→BA (clavier)', found: EASTER_EGGS_FOUND.konami }
+            ];
+            
+            eggs.forEach((egg, index) => {
+                const item = document.createElement('div');
+                item.style.display = 'flex';
+                item.style.alignItems = 'center';
+                item.style.gap = '16px';
+                item.style.padding = '16px';
+                item.style.background = egg.found ? 'rgba(67, 233, 123, 0.3)' : 'rgba(255, 255, 255, 0.1)';
+                item.style.borderRadius = '16px';
+                item.style.marginBottom = index < eggs.length - 1 ? '12px' : '0';
+                item.style.backdropFilter = 'blur(10px)';
+                item.style.border = egg.found ? '2px solid rgba(67, 233, 123, 0.5)' : '1px solid rgba(255, 255, 255, 0.2)';
+                item.style.position = 'relative';
+                
+                const checkmark = egg.found ? '<div style="position: absolute; top: 8px; right: 8px; background: #43e97b; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">✓</div>' : '';
+                
+                item.innerHTML = `
+                    <div style="font-size: 2.5rem; flex-shrink: 0;">${egg.emoji}</div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 4px;">${egg.title}</div>
+                        <div style="font-size: 0.85rem; opacity: 0.8;">${egg.desc}</div>
+                    </div>
+                    ${checkmark}
+                `;
+                
+                content.appendChild(item);
+            });
+            
+            const foundCount = Object.values(EASTER_EGGS_FOUND).filter(v => v).length;
+            const footer = document.createElement('div');
+            footer.style.padding = '20px 24px';
+            footer.style.textAlign = 'center';
+            footer.style.borderTop = '1px solid rgba(255, 255, 255, 0.2)';
+            footer.innerHTML = `<p style="margin: 0; color: white; font-size: 0.9rem; opacity: 0.9;">🎉 ${foundCount}/8 trouvés ! ${foundCount === 8 ? 'BRAVO ! 🏆' : ''}</p><p style="margin: 8px 0 0 0; color: white; font-size: 0.85rem; opacity: 0.8;">🎊 Amuse-toi bien ! 🎊</p>`;
+            
+            const closeBtn = document.createElement('button');
+            closeBtn.innerHTML = '✕';
+            closeBtn.style.position = 'absolute';
+            closeBtn.style.top = '16px';
+            closeBtn.style.right = '16px';
+            closeBtn.style.width = '40px';
+            closeBtn.style.height = '40px';
+            closeBtn.style.borderRadius = '50%';
+            closeBtn.style.background = 'rgba(255, 255, 255, 0.2)';
+            closeBtn.style.border = 'none';
+            closeBtn.style.color = 'white';
+            closeBtn.style.fontSize = '1.5rem';
+            closeBtn.style.cursor = 'pointer';
+            closeBtn.style.display = 'flex';
+            closeBtn.style.alignItems = 'center';
+            closeBtn.style.justifyContent = 'center';
+            closeBtn.style.transition = 'all 0.3s ease';
+            closeBtn.style.zIndex = '1';
+            
+            closeBtn.addEventListener('click', () => {
+                overlay.remove();
+            });
+            
+            popup.appendChild(closeBtn);
+            popup.appendChild(header);
+            popup.appendChild(content);
+            popup.appendChild(footer);
+            overlay.appendChild(popup);
+            document.body.appendChild(overlay);
+            
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) {
+                    overlay.remove();
+                }
+            });
+            
+            if (!EASTER_EGGS_FOUND.list) {
+                markEasterEggFound('list');
+            }
+            
+            triggerConfetti(50, 5000);
+        }
+        
+        // ===== NAVIGATION =====
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            
+            document.querySelectorAll('.nav-btn').forEach((btn, index) => {
+                btn.classList.remove('active');
+            });
+            
+            const screenMap = {
+                'homeScreen': 0,
+                'playerScreen': 1,
+                'radiosScreen': 2,
+                'favoritesScreen': 3,
+                'settingsScreen': 4
+            };
+            
+            document.querySelectorAll('.nav-btn')[screenMap[screenId]].classList.add('active');
+            
+            if (screenId === 'favoritesScreen') {
+                renderFavorites();
+            }
+            
+            // Afficher l'alerte uniquement la première fois qu'on va sur Radios
+            if (screenId === 'radiosScreen') {
+                const hasSeenAlert = localStorage.getItem('vibes_radios_alert_seen');
+                if (!hasSeenAlert) {
+                    showRadiosAlert();
+                    localStorage.setItem('vibes_radios_alert_seen', 'true');
+                }
+            }
+        }
+        
+        function showRadiosAlert() {
+            // Son de notification agréable (cloche douce)
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // Premier ton (cloche haute)
+            const osc1 = audioContext.createOscillator();
+            const gain1 = audioContext.createGain();
+            osc1.connect(gain1);
+            gain1.connect(audioContext.destination);
+            osc1.frequency.value = 800;
+            osc1.type = 'sine';
+            gain1.gain.setValueAtTime(0.15, audioContext.currentTime);
+            gain1.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            osc1.start(audioContext.currentTime);
+            osc1.stop(audioContext.currentTime + 0.3);
+            
+            // Deuxième ton (cloche basse) - léger décalage
+            setTimeout(() => {
+                const osc2 = audioContext.createOscillator();
+                const gain2 = audioContext.createGain();
+                osc2.connect(gain2);
+                gain2.connect(audioContext.destination);
+                osc2.frequency.value = 600;
+                osc2.type = 'sine';
+                gain2.gain.setValueAtTime(0.15, audioContext.currentTime);
+                gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+                osc2.start(audioContext.currentTime);
+                osc2.stop(audioContext.currentTime + 0.4);
+            }, 100);
+            
+            const overlay = document.createElement('div');
+            overlay.className = 'alert-overlay';
+            
+            overlay.innerHTML = `
+                <div class="alert-box">
+                    <span class="alert-icon">🎵</span>
+                    <h3 class="alert-title">Bienvenue sur les Radios !</h3>
+                    <p class="alert-message">
+                        <strong>🌍 Info importante :</strong><br><br>
+                        Tu remarqueras que certaines radios comme <strong>Noël 🎄</strong>, <strong>Jazz 🎷</strong> et <strong>Anime 🎌</strong> apparaissent dans plusieurs pays.<br><br>
+                        C'est normal ! On les a ajoutées partout pour que tu puisses y accéder facilement, peu importe ton pays préféré 😊
+                    </p>
+                    <button class="alert-btn" onclick="this.closest('.alert-overlay').remove()">J'ai compris ! 🎉</button>
+                </div>
+            `;
+            
+            document.body.appendChild(overlay);
+            
+            // Fermer en cliquant sur le fond
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) {
+                    overlay.remove();
+                }
+            });
+        }
+        
+        // ===== MODE PERFORMANCE =====
+        const performanceModeToggle = document.getElementById('performanceModeToggle');
+        let performanceMode = localStorage.getItem('vibes_performance_mode') === 'true';
+        
+        if (performanceMode) {
+            document.body.classList.add('performance-mode');
+            performanceModeToggle.classList.add('active');
+        }
+        
+        performanceModeToggle.addEventListener('click', function() {
+            this.classList.toggle('active');
+            performanceMode = this.classList.contains('active');
+            localStorage.setItem('vibes_performance_mode', performanceMode);
+            
+            if (performanceMode) {
+                document.body.classList.add('performance-mode');
+                showToast('⚡ Mode Performance activé');
+            } else {
+                document.body.classList.remove('performance-mode');
+                showToast('✨ Animations réactivées');
+            }
+        });
+        
+        // ===== AUDIO PLAYER =====
+        function playRadio(index) {
+            if (index < 0 || index >= RADIOS.length) return;
+            
+            currentRadioIndex = index;
+            const radio = RADIOS[index];
+            
+            audioPlayer.src = radio.url;
+            audioPlayer.play().then(() => {
+                isPlaying = true;
+                playBtn.textContent = '⏸️';
+                vinylCircle.classList.add('playing');
+                trackName.textContent = radio.name;
+                trackGenre.textContent = radio.genre;
+                vinylEmoji.textContent = radio.emoji;
+                showToast(`🎵 ${radio.name}`);
+            }).catch(err => {
+                showToast('❌ Erreur de lecture');
+                console.error(err);
+            });
+        }
+        
+        playBtn.addEventListener('click', () => {
+            if (currentRadioIndex === -1 && RADIOS.length > 0) {
+                playRadio(0);
+            } else if (isPlaying) {
+                audioPlayer.pause();
+                isPlaying = false;
+                playBtn.textContent = '▶️';
+                vinylCircle.classList.remove('playing');
+            } else {
+                audioPlayer.play();
+                isPlaying = true;
+                playBtn.textContent = '⏸️';
+                vinylCircle.classList.add('playing');
+            }
+        });
+        
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            if (currentRadioIndex === -1) return;
+            
+            let newIndex = currentRadioIndex;
+            let attempts = 0;
+            
+            do {
+                newIndex = newIndex - 1;
+                if (newIndex < 0) newIndex = RADIOS.length - 1;
+                attempts++;
+                
+                if (attempts > RADIOS.length) {
+                    showToast('🔒 Aucune radio disponible');
+                    return;
+                }
+            } while (RADIOS[newIndex].locked);
+            
+            playRadio(newIndex);
+        });
+        
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            if (currentRadioIndex === -1) return;
+            
+            let newIndex = currentRadioIndex;
+            let attempts = 0;
+            
+            do {
+                newIndex = (newIndex + 1) % RADIOS.length;
+                attempts++;
+                
+                if (attempts > RADIOS.length) {
+                    showToast('🔒 Aucune radio disponible');
+                    return;
+                }
+            } while (RADIOS[newIndex].locked);
+            
+            playRadio(newIndex);
+        });
+        
+        document.getElementById('volumeSlider').addEventListener('input', (e) => {
+            audioPlayer.volume = e.target.value / 100;
+        });
+        
+        // ===== RADIOS =====
+        function renderRadios() {
+            const container = document.getElementById('radiosContainer');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            let filteredRadios = RADIOS.filter(radio => {
+                const matchesSearch = radio.name.toLowerCase().includes(searchTerm) || 
+                                     radio.country.toLowerCase().includes(searchTerm) ||
+                                     radio.genre.toLowerCase().includes(searchTerm);
+                const matchesCountry = currentCountry === 'all' || radio.country === currentCountry;
+                return matchesSearch && matchesCountry;
+            });
+            
+            container.innerHTML = filteredRadios.map((radio, index) => {
+                const realIndex = RADIOS.indexOf(radio);
+                const isFavorite = favorites.includes(realIndex);
+                const isLocked = radio.locked;
+                
+                if (isLocked) {
+                    // Radio verrouillée
+                    return `
+                        <div class="radio-card locked-radio" onclick="showLockedMessage()" style="opacity: 0.6; cursor: not-allowed;">
+                            <div class="radio-icon" style="position: relative;">
+                                ${radio.emoji}
+                                <div style="position: absolute; bottom: -5px; right: -5px; background: rgba(0,0,0,0.8); border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">🔒</div>
+                            </div>
+                            <div class="radio-info">
+                                <div class="radio-name">${radio.name}</div>
+                                <div class="radio-genre">${radio.country} • ${radio.genre}</div>
+                            </div>
+                            <div style="font-size: 1.5rem;">🔒</div>
+                        </div>
+                    `;
+                } else {
+                    // Radio normale
+                    return `
+                        <div class="radio-card" onclick="playRadio(${realIndex}); showScreen('playerScreen')">
+                            <div class="radio-icon">${radio.emoji}</div>
+                            <div class="radio-info">
+                                <div class="radio-name">${radio.name}</div>
+                                <div class="radio-genre">${radio.country} • ${radio.genre}</div>
+                            </div>
+                            <button class="favorite-btn ${isFavorite ? 'active' : ''}" onclick="toggleFavorite(event, ${realIndex})">
+                                ${isFavorite ? '❤️' : '🤍'}
+                            </button>
+                        </div>
+                    `;
+                }
+            }).join('');
+        }
+        
+        function showLockedMessage() {
+            const overlay = document.createElement('div');
+            overlay.className = 'alert-overlay';
+            
+            overlay.innerHTML = `
+                <div class="alert-box">
+                    <span class="alert-icon">🔒</span>
+                    <h3 class="alert-title">Radio Saisonnière</h3>
+                    <p class="alert-message">
+                        <strong>🎄 Cette radio n'est plus disponible</strong><br><br>
+                        Les radios de Noël sont uniquement accessibles pendant le mois de décembre 🎅<br><br>
+                        Elles reviendront l'année prochaine ! ❄️
+                    </p>
+                    <button class="alert-btn" onclick="this.closest('.alert-overlay').remove()">J'ai compris 😊</button>
+                </div>
+            `;
+            
+            document.body.appendChild(overlay);
+            
+            // Son de verrouillage (buzz de refus)
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // Première note descendante
+            const osc1 = audioContext.createOscillator();
+            const gain1 = audioContext.createGain();
+            osc1.connect(gain1);
+            gain1.connect(audioContext.destination);
+            osc1.frequency.setValueAtTime(300, audioContext.currentTime);
+            osc1.frequency.exponentialRampToValueAtTime(150, audioContext.currentTime + 0.15);
+            osc1.type = 'square';
+            gain1.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gain1.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+            osc1.start(audioContext.currentTime);
+            osc1.stop(audioContext.currentTime + 0.15);
+            
+            // Deuxième note descendante
+            setTimeout(() => {
+                const osc2 = audioContext.createOscillator();
+                const gain2 = audioContext.createGain();
+                osc2.connect(gain2);
+                gain2.connect(audioContext.destination);
+                osc2.frequency.setValueAtTime(280, audioContext.currentTime);
+                osc2.frequency.exponentialRampToValueAtTime(140, audioContext.currentTime + 0.15);
+                osc2.type = 'square';
+                gain2.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+                osc2.start(audioContext.currentTime);
+                osc2.stop(audioContext.currentTime + 0.15);
+            }, 150);
+            
+            // Fermer en cliquant sur le fond
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) {
+                    overlay.remove();
+                }
+            });
+        }
+        
+        function toggleFavorite(event, index) {
+            event.stopPropagation();
+            const favIndex = favorites.indexOf(index);
+            
+            if (favIndex > -1) {
+                favorites.splice(favIndex, 1);
+            } else {
+                favorites.push(index);
+            }
+            
+            localStorage.setItem('vibes_favorites', JSON.stringify(favorites));
+            renderRadios();
+            renderFavorites();
+        }
+        
+        function renderFavorites() {
+            const container = document.getElementById('favoritesContainer');
+            
+            if (favorites.length === 0) {
+                container.innerHTML = '<p style="text-align: center; opacity: 0.7; padding: 40px 20px;">Aucun favori pour le moment.<br>Ajoutez des radios depuis l\'onglet Radios !</p>';
+                return;
+            }
+            
+            container.innerHTML = favorites.map(index => {
+                const radio = RADIOS[index];
+                if (!radio) return '';
+                return `
+                    <div class="radio-card" onclick="playRadio(${index}); showScreen('playerScreen')">
+                        <div class="radio-icon">${radio.emoji}</div>
+                        <div class="radio-info">
+                            <div class="radio-name">${radio.name}</div>
+                            <div class="radio-genre">${radio.genre}</div>
+                        </div>
+                        <button class="favorite-btn active" onclick="toggleFavorite(event, ${index})">❤️</button>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        document.getElementById('searchInput').addEventListener('input', renderRadios);
+        
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                currentCountry = this.dataset.country;
+                renderRadios();
+            });
+        });
+        
+        // ===== SETTINGS =====
+        const seasonalThemeToggle = document.getElementById('seasonalThemeToggle');
+        const seasonSelector = document.getElementById('seasonSelector');
+        let seasonalThemeEnabled = localStorage.getItem('vibes_seasonal_theme') !== 'false';
+        
+        if (!seasonalThemeEnabled) {
+            seasonalThemeToggle.classList.remove('active');
+        }
+        
+        seasonalThemeToggle.addEventListener('click', function() {
+            this.classList.toggle('active');
+            seasonalThemeEnabled = this.classList.contains('active');
+            localStorage.setItem('vibes_seasonal_theme', seasonalThemeEnabled);
+            
+            if (seasonalThemeEnabled) {
+                applySeason();
+                seasonSelector.style.display = 'none';
+                showToast('🌈 Thème saisonnier activé');
+            } else {
+                seasonSelector.style.display = 'grid';
+                showToast('🎨 Mode manuel activé');
+            }
+        });
+        
+        document.querySelectorAll('.season-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.season-option').forEach(o => o.classList.remove('active'));
+                this.classList.add('active');
+                
+                const season = this.dataset.season;
+                document.body.className = season;
+                if (performanceMode) document.body.classList.add('performance-mode');
+                localStorage.setItem('vibes_manual_season', season);
+                updateSeasonEmoji(season);
+                showToast(`${this.querySelector('.season-emoji').textContent} Thème ${season} appliqué`);
+            });
+        });
+        
+        function applySeason() {
+            const month = new Date().getMonth();
+            let season;
+            
+            if (month >= 2 && month <= 4) season = 'spring';
+            else if (month >= 5 && month <= 7) season = 'summer';
+            else if (month >= 8 && month <= 10) season = 'autumn';
+            else season = 'winter';
+            
+            document.body.className = season;
+            if (performanceMode) document.body.classList.add('performance-mode');
+            updateSeasonEmoji(season);
+        }
+        
+        function updateSeasonEmoji(season) {
+            const emojis = {
+                winter: '❄️',
+                spring: '🌸',
+                summer: '☀️',
+                autumn: '🍂'
+            };
+            document.getElementById('seasonEmoji').textContent = emojis[season] || '❄️';
+        }
+        
+        // ===== TOAST =====
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.position = 'fixed';
+            toast.style.bottom = '100px';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%)';
+            toast.style.background = 'rgba(0, 0, 0, 0.8)';
+            toast.style.color = 'white';
+            toast.style.padding = '12px 24px';
+            toast.style.borderRadius = '50px';
+            toast.style.zIndex = '10000';
+            toast.style.fontSize = '0.9rem';
+            toast.style.fontWeight = '600';
+            toast.style.backdropFilter = 'blur(10px)';
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 2000);
+        }
+        
+        // ===== INIT =====
+        if (seasonalThemeEnabled) {
+            applySeason();
+        } else {
+            const manualSeason = localStorage.getItem('vibes_manual_season') || 'winter';
+            document.body.className = manualSeason;
+            if (performanceMode) document.body.classList.add('performance-mode');
+            updateSeasonEmoji(manualSeason);
+            seasonSelector.style.display = 'grid';
+            document.querySelector(`.season-option[data-season="${manualSeason}"]`)?.classList.add('active');
+        }
+        
+        renderRadios();
+        updateEasterEggsCount();
+        
+        // ===== BOUTONS EXTRA =====
+        
+        // Bouton reset alerte radios
+        document.getElementById('resetAlertBtn').addEventListener('click', function() {
+            localStorage.removeItem('vibes_radios_alert_seen');
+            showToast('✅ L\'alerte s\'affichera à nouveau sur Radios !');
+            this.style.background = 'rgba(67, 233, 123, 0.2)';
+            setTimeout(() => {
+                this.style.background = '';
+            }, 1000);
+        });
+        
+        // Bouton effacer favoris
+        document.getElementById('clearFavoritesBtn').addEventListener('click', function() {
+            if (confirm('⚠️ Êtes-vous sûr de vouloir supprimer tous vos favoris ?')) {
+                favorites = [];
+                localStorage.removeItem('vibes_favorites');
+                renderRadios();
+                renderFavorites();
+                showToast('🗑️ Favoris supprimés !');
+                this.style.background = 'rgba(238, 9, 121, 0.2)';
+                setTimeout(() => {
+                    this.style.background = '';
+                }, 1000);
+            }
+        });
+        
+        // Bouton reset Easter Eggs
+        document.getElementById('resetEasterEggsBtn').addEventListener('click', function() {
+            if (confirm('🎮 Voulez-vous recommencer la chasse aux Easter Eggs ?')) {
+                EASTER_EGGS_FOUND = {
+                    confetti: false,
+                    shake: false,
+                    djMode: false,
+                    secretRadio: false,
+                    rainbow: false,
+                    list: false,
+                    double: false,
+                    konami: false
+                };
+                localStorage.setItem('vibes_easter_eggs', JSON.stringify(EASTER_EGGS_FOUND));
+                updateEasterEggsCount();
+                showToast('🎁 Easter Eggs réinitialisés !');
+                this.style.background = 'rgba(253, 187, 45, 0.2)';
+                setTimeout(() => {
+                    this.style.background = '';
+                }, 1000);
+            }
+        });
+        
+        // Bouton reset complet
+        document.getElementById('resetAllBtn').addEventListener('click', function() {
+            if (confirm('⚠️ ATTENTION ! Cela va supprimer TOUTES vos données (favoris, Easter Eggs, préférences, etc.). Continuer ?')) {
+                if (confirm('🚨 Dernière confirmation : êtes-vous vraiment sûr ?')) {
+                    // Supprimer toutes les données
+                    localStorage.removeItem('vibes_favorites');
+                    localStorage.removeItem('vibes_easter_eggs');
+                    localStorage.removeItem('vibes_performance_mode');
+                    localStorage.removeItem('vibes_seasonal_theme');
+                    localStorage.removeItem('vibes_manual_season');
+                    localStorage.removeItem('vibes_radios_alert_seen');
+                    
+                    showToast('🔄 Application réinitialisée !');
+                    
+                    // Recharger la page après 2 secondes
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                }
+            }
+        });
+        
+        console.log('🎁 Easter Eggs activés ! Tape "VIBES" dans la recherche pour les découvrir ! 🐰');
+    </script>
+</body>
+</html>
