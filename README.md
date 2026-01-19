@@ -21,9 +21,7 @@ Application radio mobile progressive (PWA) avec 29 radios internationales de 8 p
 
 ## 🚀 Démo en ligne
 
-Accède à l'application : [https://tfasty.github.io/vibes-radio-mobile/](https://tfasty.github.io/vibes-radio-mobile/)
-
-*(Remplace par ton vrai lien GitHub Pages)*
+Accède à l'application : [https://tfasty.github.io/vibes-radio-mobile/](https://github.com/tfasty/vibes-radio-mobile)
 
 ## 📱 Installation
 
