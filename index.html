@@ -11,7 +11,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#667eea">
     
-    <title>Vibes Radio Mobile v1.2 - App 🎵</title>
+    <title>Vibes Radio Mobile v1.3 - App 🎵</title>
     
     <!-- PWA -->
     <link rel="manifest" href="manifest.json">
@@ -80,6 +80,105 @@
             position: fixed;
             padding-bottom: 0;
             width: 100%;
+            position: relative;
+        }
+        
+        /* Container pour les émojis flottants */
+        .season-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .season-particle {
+            position: absolute;
+            font-size: 1.2rem;
+            opacity: 0.4;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+        
+        /* Animation flocons de neige (Hiver) */
+        @keyframes fall-winter {
+            0% {
+                transform: translateY(-10px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.4;
+            }
+            90% {
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Animation pétales (Printemps) */
+        @keyframes fall-spring {
+            0% {
+                transform: translateY(-10px) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.4;
+            }
+            90% {
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateY(100vh) translateX(30px) rotate(180deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Animation soleil/vagues (Été) */
+        @keyframes fall-summer {
+            0% {
+                transform: translateY(-10px) scale(0.8);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(50vh) scale(1.2);
+            }
+            90% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(100vh) scale(0.8);
+                opacity: 0;
+            }
+        }
+        
+        /* Animation feuilles (Automne) */
+        @keyframes fall-autumn {
+            0% {
+                transform: translateY(-10px) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.4;
+            }
+            50% {
+                transform: translateY(50vh) translateX(-20px) rotate(180deg);
+            }
+            90% {
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateY(100vh) translateX(10px) rotate(360deg);
+                opacity: 0;
+            }
         }
         
         /* Mode Performance */
@@ -90,6 +189,10 @@
         
         body.performance-mode .vinyl-circle.playing {
             animation: none !important;
+        }
+        
+        body.performance-mode .season-particles {
+            display: none !important;
         }
         
         /* HEADER MOBILE */
@@ -1064,18 +1167,31 @@
             
             <div class="subsection">
                 <div class="update-header">
-                    <span class="update-version-badge">v1.2 Mobile</span>
+                    <span class="update-version-badge">v1.3 Mobile</span>
+                    <span class="update-date-text">📅 20 Janvier 2026</span>
+                </div>
+                <div class="subsection-desc update-content-text">
+                    💻 Détection PC/Mobile avec redirection automatique<br>
+                    🔊 Sons complètement refaits (cloches douces)<br>
+                    ⏭️ Skip automatique des radios verrouillées<br>
+                    🎨 Optimisations d'interface<br>
+                    🐛 Corrections de bugs mineurs
+                </div>
+            </div>
+            
+            <div class="subsection">
+                <div class="update-header">
+                    <span class="update-version-badge" style="background: rgba(255,255,255,0.3);">v1.2 Mobile</span>
                     <span class="update-date-text">📅 19 Janvier 2026</span>
                 </div>
                 <div class="subsection-desc update-content-text">
-                    🔒 Radios saisonnières (Noël verrouillées)<br>
+                    🔒 Radios saisonnières (Noël verrouillées hors saison)<br>
                     🎁 Nouvelle section "Extra" dans Paramètres<br>
                     🔄 Bouton reset alerte radios<br>
                     🗑️ Bouton effacer favoris<br>
                     🎮 Bouton reset Easter Eggs<br>
                     ⚠️ Bouton réinitialisation complète<br>
-                    🔊 Sons améliorés (plus doux et graves)<br>
-                    📊 31 radios actives + 7 saisonnières
+                    📊 29 radios actives + 6 saisonnières
                 </div>
             </div>
             
@@ -1258,6 +1374,15 @@
                         </div>
                     </div>
                 </div>
+                <div class="setting-item" id="toggleDevModeBtn" style="cursor: pointer;">
+                    <div class="setting-label">
+                        <span class="setting-icon">👨‍💻</span>
+                        <div class="setting-text">
+                            <div class="setting-name">Mode Développeur</div>
+                            <div class="setting-desc" id="devModeStatus">Désactivé</div>
+                        </div>
+                    </div>
+                </div>
                 <div class="setting-item" id="resetAllBtn" style="cursor: pointer;">
                     <div class="setting-label">
                         <span class="setting-icon">⚠️</span>
@@ -1278,7 +1403,7 @@
                         <span class="setting-icon">📱</span>
                         <div class="setting-text">
                             <div class="setting-name">Version</div>
-                            <div class="setting-desc">1.2</div>
+                            <div class="setting-desc">1.3</div>
                         </div>
                     </div>
                 </div>
@@ -1323,6 +1448,141 @@
     <audio id="audioPlayer"></audio>
     
     <script>
+        // ===== DÉTECTION PC/MOBILE =====
+        function detectDevice() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            const isMobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|tablet/i.test(userAgent);
+            const isSmallScreen = window.innerWidth <= 1024;
+            
+            // Vérifier si le mode développeur est activé
+            const devMode = localStorage.getItem('vibes_dev_mode');
+            
+            // Si on est sur PC (grand écran ET pas mobile) ET pas en mode dev
+            if (!isMobile && !isSmallScreen && devMode !== 'true') {
+                showPCRedirectAlert();
+            }
+        }
+        
+        function showPCRedirectAlert() {
+            const overlay = document.createElement('div');
+            overlay.className = 'alert-overlay';
+            overlay.style.zIndex = '99999';
+            
+            overlay.innerHTML = `
+                <div class="alert-box">
+                    <span class="alert-icon">💻</span>
+                    <h3 class="alert-title">Version PC détectée</h3>
+                    <p class="alert-message">
+                        <strong>🖥️ Tu es sur un ordinateur !</strong><br><br>
+                        Cette version est optimisée pour <strong>mobile</strong> 📱<br><br>
+                        Tu vas être redirigé vers la <strong>version PC</strong> !
+                    </p>
+                    <button class="alert-btn" onclick="redirectToPC()">
+                        OK, aller sur PC ! 💻
+                    </button>
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.2);">
+                        <button class="alert-btn" onclick="showDevModePrompt()" style="background: rgba(255,255,255,0.1); font-size: 0.85rem; padding: 10px 20px;">
+                            👨‍💻 Mode Développeur
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(overlay);
+            
+            // Son de notification
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const osc1 = audioContext.createOscillator();
+            const gain1 = audioContext.createGain();
+            osc1.connect(gain1);
+            gain1.connect(audioContext.destination);
+            osc1.frequency.value = 800;
+            osc1.type = 'sine';
+            gain1.gain.setValueAtTime(0.15, audioContext.currentTime);
+            gain1.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            osc1.start(audioContext.currentTime);
+            osc1.stop(audioContext.currentTime + 0.3);
+        }
+        
+        function showDevModePrompt() {
+            const code = prompt('🔐 Entre le code développeur :');
+            
+            // Code secret personnel
+            if (code === 'Tfasty_VibesRadio_13-01_2026') {
+                localStorage.setItem('vibes_dev_mode', 'true');
+                document.querySelector('.alert-overlay').remove();
+                showToast('🎉 Mode Développeur activé !');
+                
+                // Afficher un badge développeur
+                const devBadge = document.createElement('div');
+                devBadge.id = 'dev-badge';
+                devBadge.innerHTML = '👨‍💻 DEV';
+                devBadge.style.cssText = `
+                    position: fixed;
+                    bottom: 80px;
+                    left: 10px;
+                    background: rgba(255, 0, 0, 0.8);
+                    color: white;
+                    padding: 8px 12px;
+                    border-radius: 8px;
+                    font-size: 0.7rem;
+                    font-weight: 800;
+                    z-index: 999;
+                    box-shadow: 0 4px 15px rgba(255, 0, 0, 0.5);
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                    pointer-events: none;
+                `;
+                document.body.appendChild(devBadge);
+            } else if (code !== null) {
+                showToast('❌ Code incorrect !');
+            }
+        }
+        
+        function redirectToPC() {
+            window.location.href = 'https://tfasty.github.io/vibes-radio-laptop/';
+        }
+        
+        // Lancer la détection au chargement
+        detectDevice();
+        
+        // ===== ÉMOJIS FLOTTANTS SAISONNIERS =====
+        function createSeasonParticles() {
+            // Supprimer l'ancien container s'il existe
+            const oldContainer = document.querySelector('.season-particles');
+            if (oldContainer) oldContainer.remove();
+            
+            const container = document.createElement('div');
+            container.className = 'season-particles';
+            document.body.appendChild(container);
+            
+            // Définir les émojis par saison
+            const seasonEmojis = {
+                winter: ['❄️', '⛄', '🌨️', '❄️', '❄️'], // Plus de flocons
+                spring: ['🌸', '🌺', '🌼', '🦋', '🌷'],
+                summer: ['☀️', '🌊', '🏖️', '🍉', '🌴'],
+                autumn: ['🍂', '🍁', '🎃', '🍄', '🌰']
+            };
+            
+            const currentSeason = document.body.className.split(' ')[0] || 'winter';
+            const emojis = seasonEmojis[currentSeason] || seasonEmojis.winter;
+            
+            // Créer 10 émojis avec des positions et durées aléatoires
+            for (let i = 0; i < 10; i++) {
+                const emoji = document.createElement('div');
+                emoji.className = 'season-particle';
+                emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                emoji.style.left = Math.random() * 100 + '%';
+                emoji.style.animationName = 'fall-' + currentSeason;
+                emoji.style.animationDuration = (15 + Math.random() * 15) + 's';
+                emoji.style.animationDelay = Math.random() * 10 + 's';
+                container.appendChild(emoji);
+            }
+        }
+        
+        // Créer les particules au chargement
+        createSeasonParticles();
+        
         // ===== CONFIGURATION =====
         const RADIOS = [
             // 🇫🇷 FRANCE
@@ -1422,6 +1682,7 @@
         // Easter Egg: Triple tap sur logo
         let logoTapCount = 0;
         let logoTapTimer = null;
+        // Easter Egg 1: Triple tap sur logo → Confetti
         document.getElementById('logoElement').addEventListener('click', () => {
             logoTapCount++;
             if (logoTapTimer) clearTimeout(logoTapTimer);
@@ -1437,19 +1698,51 @@
             }, 500);
         });
         
-        // Easter Egg: Long press sur emoji saison
-        let seasonLongPressTimer = null;
-        document.getElementById('seasonEmoji').addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            seasonLongPressTimer = setTimeout(() => {
-                triggerShakeEffect();
-                markEasterEggFound('shake');
-            }, 3000);
+        // Easter Egg 7: Appui long sur logo → Party Mode
+        let logoLongPressTimer = null;
+        document.getElementById('logoElement').addEventListener('touchstart', () => {
+            logoLongPressTimer = setTimeout(() => {
+                triggerPartyMode();
+                markEasterEggFound('double');
+            }, 2000);
         });
         
-        document.getElementById('seasonEmoji').addEventListener('touchend', () => {
-            if (seasonLongPressTimer) clearTimeout(seasonLongPressTimer);
+        document.getElementById('logoElement').addEventListener('touchend', () => {
+            if (logoLongPressTimer) clearTimeout(logoLongPressTimer);
         });
+        
+        // Easter Egg: Secoue ton téléphone (devicemotion)
+        let shakeCount = 0;
+        let lastShakeTime = 0;
+        let shakeResetTimer = null;
+        
+        if (window.DeviceMotionEvent) {
+            window.addEventListener('devicemotion', (e) => {
+                const acc = e.accelerationIncludingGravity;
+                if (!acc) return;
+                
+                const movement = Math.abs(acc.x) + Math.abs(acc.y) + Math.abs(acc.z);
+                const now = Date.now();
+                
+                // Détecter un mouvement brusque
+                if (movement > 40 && now - lastShakeTime > 300) {
+                    shakeCount++;
+                    lastShakeTime = now;
+                    
+                    if (shakeResetTimer) clearTimeout(shakeResetTimer);
+                    
+                    if (shakeCount >= 3) {
+                        triggerShakeEffect();
+                        markEasterEggFound('shake');
+                        shakeCount = 0;
+                    } else {
+                        shakeResetTimer = setTimeout(() => {
+                            shakeCount = 0;
+                        }, 2000);
+                    }
+                }
+            });
+        }
         
         // Easter Egg: Long press sur vinyl
         let vinylLongPressTimer = null;
@@ -1509,25 +1802,105 @@
             }
         });
         
-        // Easter Egg 7: Double tap rapide sur le header "Vibes Radio"
-        let headerTapCount = 0;
-        let headerTapTimer = null;
-        document.querySelector('.logo').addEventListener('click', () => {
-            headerTapCount++;
-            if (headerTapTimer) clearTimeout(headerTapTimer);
-            
-            if (headerTapCount === 2) {
-                triggerPartyMode();
-                markEasterEggFound('double');
-                headerTapCount = 0;
+        // Easter Egg 8: Konami Code - Version mobile tactile
+        let konamiSwipes = [];
+        let konamiPattern = ['up', 'up', 'down', 'down', 'left', 'right', 'left', 'right'];
+        let konamiTouchStart = { x: 0, y: 0 };
+        let konamiVisualFeedback = null;
+        
+        // Créer l'indicateur visuel
+        function createKonamiIndicator() {
+            if (!konamiVisualFeedback) {
+                konamiVisualFeedback = document.createElement('div');
+                konamiVisualFeedback.id = 'konami-indicator';
+                konamiVisualFeedback.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: rgba(0, 0, 0, 0.9);
+                    color: white;
+                    padding: 20px 30px;
+                    border-radius: 15px;
+                    font-size: 2rem;
+                    z-index: 10000;
+                    display: none;
+                    backdrop-filter: blur(10px);
+                    border: 2px solid rgba(255, 255, 255, 0.3);
+                `;
+                document.body.appendChild(konamiVisualFeedback);
             }
-            
-            headerTapTimer = setTimeout(() => {
-                headerTapCount = 0;
-            }, 500);
+        }
+        
+        createKonamiIndicator();
+        
+        // Détecter les swipes
+        document.addEventListener('touchstart', (e) => {
+            konamiTouchStart.x = e.touches[0].clientX;
+            konamiTouchStart.y = e.touches[0].clientY;
         });
         
-        // Easter Egg 8: Konami Code
+        document.addEventListener('touchend', (e) => {
+            const deltaX = e.changedTouches[0].clientX - konamiTouchStart.x;
+            const deltaY = e.changedTouches[0].clientY - konamiTouchStart.y;
+            
+            // Détecter la direction du swipe
+            if (Math.abs(deltaX) > 50 || Math.abs(deltaY) > 50) {
+                let direction = '';
+                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    direction = deltaX > 0 ? 'right' : 'left';
+                } else {
+                    direction = deltaY > 0 ? 'down' : 'up';
+                }
+                
+                konamiSwipes.push(direction);
+                
+                // Afficher le feedback visuel
+                konamiVisualFeedback.textContent = konamiSwipes.map(d => {
+                    if (d === 'up') return '⬆️';
+                    if (d === 'down') return '⬇️';
+                    if (d === 'left') return '⬅️';
+                    if (d === 'right') return '➡️';
+                }).join(' ');
+                konamiVisualFeedback.style.display = 'block';
+                
+                // Cacher après 1 seconde
+                setTimeout(() => {
+                    konamiVisualFeedback.style.display = 'none';
+                }, 1000);
+                
+                // Vérifier le pattern
+                if (konamiSwipes.length === konamiPattern.length) {
+                    let match = true;
+                    for (let i = 0; i < konamiPattern.length; i++) {
+                        if (konamiSwipes[i] !== konamiPattern[i]) {
+                            match = false;
+                            break;
+                        }
+                    }
+                    
+                    if (match) {
+                        triggerKonamiMode();
+                        markEasterEggFound('konami');
+                        konamiVisualFeedback.textContent = '🎮 KONAMI! 🎮';
+                        konamiVisualFeedback.style.display = 'block';
+                        setTimeout(() => {
+                            konamiVisualFeedback.remove();
+                            konamiVisualFeedback = null;
+                        }, 2000);
+                    }
+                    
+                    konamiSwipes = [];
+                }
+                
+                // Reset si trop long
+                if (konamiSwipes.length > konamiPattern.length) {
+                    konamiSwipes = [];
+                }
+            }
+        });
+        
+        // Konami code clavier (PC)
         let konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
         let konamiIndex = 0;
         
@@ -1601,26 +1974,32 @@
         }
         
         function triggerDJMode() {
-            vinylCircle.style.animation = 'spinVinyl 0.5s linear infinite';
+            // Faire tourner super vite sans déformer
+            const vinyl = document.querySelector('.vinyl-circle');
+            vinyl.style.animation = 'spinVinyl 0.3s linear infinite';
+            
+            // Ajouter un effet de couleur DJ
+            vinyl.style.filter = 'hue-rotate(180deg) saturate(2)';
+            
             setTimeout(() => {
-                vinylCircle.style.animation = isPlaying ? 'spinVinyl 3s linear infinite' : '';
+                vinyl.style.animation = isPlaying ? 'spinVinyl 3s linear infinite' : '';
+                vinyl.style.filter = '';
             }, 5000);
+            
             showToast('🎵 DJ MODE ACTIVATED! 🎵');
         }
         
         function addSecretRadio() {
-            const secretRadio = {
-                name: '🦄 Unicorn Radio',
-                url: 'https://jazz.ice.infomaniak.ch/jazz-wr03-128.mp3',
-                genre: 'Secret',
-                emoji: '🦄'
-            };
+            // Rickroll! 🎤
+            const rickrollUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
             
-            if (!RADIOS.find(r => r.name === secretRadio.name)) {
-                RADIOS.push(secretRadio);
-                renderRadios();
-                showToast('🦄 Radio Secrète Débloquée!');
-            }
+            // Ouvrir le rickroll dans un nouvel onglet
+            window.open(rickrollUrl, '_blank');
+            
+            showToast('🦄 Tu as trouvé la radio secrète! 🎉');
+            
+            // Ajouter confettis en bonus
+            triggerConfetti(100, 3000);
         }
         
         function toggleRainbowMode() {
@@ -1744,11 +2123,11 @@
                 { emoji: '🎂', title: 'Confetti Party', desc: 'Triple tap sur le logo', found: EASTER_EGGS_FOUND.confetti },
                 { emoji: '🌈', title: 'Shake It', desc: 'Secoue ton téléphone 3x', found: EASTER_EGGS_FOUND.shake },
                 { emoji: '🎵', title: 'DJ Mode', desc: 'Appui long sur le vinyl (2s)', found: EASTER_EGGS_FOUND.djMode },
-                { emoji: '🦄', title: 'Radio Secrète', desc: 'Swipe down 5x (page Radios)', found: EASTER_EGGS_FOUND.secretRadio },
+                { emoji: '🦄', title: 'Rickroll Secret', desc: 'Swipe down 5x (page Radios)', found: EASTER_EGGS_FOUND.secretRadio },
                 { emoji: '🌈', title: 'Rainbow Mode', desc: 'Double tap saison active', found: EASTER_EGGS_FOUND.rainbow },
                 { emoji: '🎁', title: 'Ce Message', desc: 'Tape "VIBES" dans recherche', found: EASTER_EGGS_FOUND.list },
-                { emoji: '🎉', title: 'Party Mode', desc: 'Double tap sur "Vibes Radio"', found: EASTER_EGGS_FOUND.double },
-                { emoji: '🎮', title: 'Konami Code', desc: '↑↑↓↓←→←→BA (clavier)', found: EASTER_EGGS_FOUND.konami }
+                { emoji: '🎉', title: 'Party Mode', desc: 'Appui long sur "Vibes Radio"', found: EASTER_EGGS_FOUND.double },
+                { emoji: '🎮', title: 'Konami Code', desc: '⬆️⬆️⬇️⬇️⬅️➡️⬅️➡️ (swipe)', found: EASTER_EGGS_FOUND.konami }
             ];
             
             eggs.forEach((egg, index) => {
@@ -2214,6 +2593,10 @@
                 if (performanceMode) document.body.classList.add('performance-mode');
                 localStorage.setItem('vibes_manual_season', season);
                 updateSeasonEmoji(season);
+                
+                // Recréer les émojis flottants pour la nouvelle saison
+                createSeasonParticles();
+                
                 showToast(`${this.querySelector('.season-emoji').textContent} Thème ${season} appliqué`);
             });
         });
@@ -2230,6 +2613,9 @@
             document.body.className = season;
             if (performanceMode) document.body.classList.add('performance-mode');
             updateSeasonEmoji(season);
+            
+            // Recréer les émojis flottants pour la nouvelle saison
+            createSeasonParticles();
         }
         
         function updateSeasonEmoji(season) {
@@ -2281,6 +2667,43 @@
         renderRadios();
         updateEasterEggsCount();
         
+        // Vérifier si le mode dev est activé au chargement
+        function checkDevMode() {
+            const devMode = localStorage.getItem('vibes_dev_mode');
+            const devModeStatus = document.getElementById('devModeStatus');
+            
+            if (devMode === 'true') {
+                devModeStatus.textContent = 'Activé ✅';
+                devModeStatus.style.color = '#43e97b';
+                
+                // Afficher le badge
+                if (!document.getElementById('dev-badge')) {
+                    const devBadge = document.createElement('div');
+                    devBadge.id = 'dev-badge';
+                    devBadge.innerHTML = '👨‍💻 DEV';
+                    devBadge.style.cssText = `
+                        position: fixed;
+                        bottom: 80px;
+                        left: 10px;
+                        background: rgba(255, 0, 0, 0.8);
+                        color: white;
+                        padding: 8px 12px;
+                        border-radius: 8px;
+                        font-size: 0.7rem;
+                        font-weight: 800;
+                        z-index: 999;
+                        box-shadow: 0 4px 15px rgba(255, 0, 0, 0.5);
+                        backdrop-filter: blur(10px);
+                        -webkit-backdrop-filter: blur(10px);
+                        pointer-events: none;
+                    `;
+                    document.body.appendChild(devBadge);
+                }
+            }
+        }
+        
+        checkDevMode();
+        
         // ===== BOUTONS EXTRA =====
         
         // Bouton reset alerte radios
@@ -2291,6 +2714,30 @@
             setTimeout(() => {
                 this.style.background = '';
             }, 1000);
+        });
+        
+        // Bouton mode développeur
+        document.getElementById('toggleDevModeBtn').addEventListener('click', function() {
+            const devMode = localStorage.getItem('vibes_dev_mode');
+            
+            if (devMode === 'true') {
+                // Désactiver
+                if (confirm('👨‍💻 Désactiver le mode développeur ?')) {
+                    localStorage.removeItem('vibes_dev_mode');
+                    const badge = document.getElementById('dev-badge');
+                    if (badge) badge.remove();
+                    document.getElementById('devModeStatus').textContent = 'Désactivé';
+                    document.getElementById('devModeStatus').style.color = '';
+                    showToast('❌ Mode Développeur désactivé');
+                    this.style.background = 'rgba(238, 9, 121, 0.2)';
+                    setTimeout(() => {
+                        this.style.background = '';
+                    }, 1000);
+                }
+            } else {
+                // Activer
+                showDevModePrompt();
+            }
         });
         
         // Bouton effacer favoris
