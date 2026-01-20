@@ -31,17 +31,6 @@ Accède à l'application : [https://tfasty.github.io/vibes-radio-mobile/](https:
 2. Clique sur "Ajouter à l'écran d'accueil"
 3. L'app s'installera comme une application native
 
-### Développement local
-
-```bash
-# Clone le repo
-git clone https://github.com/tfasty/vibes-radio-mobile.git
-
-# Ouvre index.html dans ton navigateur
-# Ou utilise un serveur local
-python -m http.server 8000
-```
-
 ## 🎮 Easter Eggs
 
 Découvre les 8 Easter Eggs cachés dans l'app :
