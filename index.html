@@ -1802,37 +1802,53 @@
             }
         });
         
-        // Easter Egg 8: Konami Code - Version mobile tactile
+        // Easter Egg 8: Konami Code - Version mobile tactile avec flèches visuelles
         let konamiSwipes = [];
         let konamiPattern = ['up', 'up', 'down', 'down', 'left', 'right', 'left', 'right'];
         let konamiTouchStart = { x: 0, y: 0 };
-        let konamiVisualFeedback = null;
+        let konamiArrowsContainer = null;
         
-        // Créer l'indicateur visuel
-        function createKonamiIndicator() {
-            if (!konamiVisualFeedback) {
-                konamiVisualFeedback = document.createElement('div');
-                konamiVisualFeedback.id = 'konami-indicator';
-                konamiVisualFeedback.style.cssText = `
+        // Créer les flèches transparentes (cachées au départ)
+        function createKonamiArrows() {
+            if (!konamiArrowsContainer) {
+                konamiArrowsContainer = document.createElement('div');
+                konamiArrowsContainer.id = 'konami-arrows';
+                konamiArrowsContainer.style.cssText = `
                     position: fixed;
                     top: 50%;
                     left: 50%;
                     transform: translate(-50%, -50%);
-                    background: rgba(0, 0, 0, 0.9);
-                    color: white;
-                    padding: 20px 30px;
-                    border-radius: 15px;
-                    font-size: 2rem;
+                    display: flex;
+                    gap: 15px;
                     z-index: 10000;
-                    display: none;
-                    backdrop-filter: blur(10px);
-                    border: 2px solid rgba(255, 255, 255, 0.3);
+                    pointer-events: none;
+                    opacity: 0;
+                    transition: opacity 0.3s ease;
                 `;
-                document.body.appendChild(konamiVisualFeedback);
+                
+                konamiPattern.forEach((direction) => {
+                    const arrow = document.createElement('div');
+                    arrow.className = 'konami-arrow';
+                    arrow.dataset.direction = direction;
+                    arrow.style.cssText = `
+                        font-size: 3rem;
+                        opacity: 0.3;
+                        transition: opacity 0.3s ease, transform 0.3s ease;
+                    `;
+                    
+                    if (direction === 'up') arrow.textContent = '⬆️';
+                    else if (direction === 'down') arrow.textContent = '⬇️';
+                    else if (direction === 'left') arrow.textContent = '⬅️';
+                    else if (direction === 'right') arrow.textContent = '➡️';
+                    
+                    konamiArrowsContainer.appendChild(arrow);
+                });
+                
+                document.body.appendChild(konamiArrowsContainer);
             }
         }
         
-        createKonamiIndicator();
+        createKonamiArrows();
         
         // Détecter les swipes
         document.addEventListener('touchstart', (e) => {
@@ -1853,49 +1869,54 @@
                     direction = deltaY > 0 ? 'down' : 'up';
                 }
                 
-                konamiSwipes.push(direction);
-                
-                // Afficher le feedback visuel
-                konamiVisualFeedback.textContent = konamiSwipes.map(d => {
-                    if (d === 'up') return '⬆️';
-                    if (d === 'down') return '⬇️';
-                    if (d === 'left') return '⬅️';
-                    if (d === 'right') return '➡️';
-                }).join(' ');
-                konamiVisualFeedback.style.display = 'block';
-                
-                // Cacher après 1 seconde
-                setTimeout(() => {
-                    konamiVisualFeedback.style.display = 'none';
-                }, 1000);
-                
-                // Vérifier le pattern
-                if (konamiSwipes.length === konamiPattern.length) {
-                    let match = true;
-                    for (let i = 0; i < konamiPattern.length; i++) {
-                        if (konamiSwipes[i] !== konamiPattern[i]) {
-                            match = false;
-                            break;
-                        }
-                    }
-                    
-                    if (match) {
-                        triggerKonamiMode();
-                        markEasterEggFound('konami');
-                        konamiVisualFeedback.textContent = '🎮 KONAMI! 🎮';
-                        konamiVisualFeedback.style.display = 'block';
-                        setTimeout(() => {
-                            konamiVisualFeedback.remove();
-                            konamiVisualFeedback = null;
-                        }, 2000);
-                    }
-                    
-                    konamiSwipes = [];
+                // Afficher les flèches au premier swipe
+                if (konamiSwipes.length === 0 && konamiArrowsContainer) {
+                    konamiArrowsContainer.style.opacity = '1';
                 }
                 
-                // Reset si trop long
-                if (konamiSwipes.length > konamiPattern.length) {
+                // Vérifier si c'est le bon swipe
+                if (direction === konamiPattern[konamiSwipes.length]) {
+                    konamiSwipes.push(direction);
+                    
+                    // Faire disparaître la flèche correspondante
+                    const arrows = document.querySelectorAll('.konami-arrow');
+                    if (arrows[konamiSwipes.length - 1]) {
+                        arrows[konamiSwipes.length - 1].style.opacity = '0';
+                        arrows[konamiSwipes.length - 1].style.transform = 'scale(1.5)';
+                    }
+                    
+                    // Si le pattern est complet
+                    if (konamiSwipes.length === konamiPattern.length) {
+                        setTimeout(() => {
+                            triggerKonamiMode();
+                            markEasterEggFound('konami');
+                            
+                            // Supprimer les flèches après succès
+                            if (konamiArrowsContainer) {
+                                konamiArrowsContainer.remove();
+                                konamiArrowsContainer = null;
+                            }
+                        }, 300);
+                        
+                        konamiSwipes = [];
+                    }
+                } else {
+                    // Mauvais swipe, reset
                     konamiSwipes = [];
+                    
+                    // Réafficher toutes les flèches
+                    const arrows = document.querySelectorAll('.konami-arrow');
+                    arrows.forEach(arrow => {
+                        arrow.style.opacity = '0.3';
+                        arrow.style.transform = 'scale(1)';
+                    });
+                    
+                    // Cacher les flèches après 1 seconde d'inactivité
+                    setTimeout(() => {
+                        if (konamiSwipes.length === 0 && konamiArrowsContainer) {
+                            konamiArrowsContainer.style.opacity = '0';
+                        }
+                    }, 1000);
                 }
             }
         });
