@@ -8,7 +8,7 @@ Application web mobile de streaming radio avec thèmes saisonniers et animations
 
 ## 📱 Aperçu
 
-Vibes Radio Mobile est une application web progressive (PWA) offrant une expérience d'écoute radio immersive avec :
+Vibes Radio Mobile est une application web progressive (PWA) offrant une expérience d'écoute radio immersive avec:
 - **29 radios actives** + 6 radios saisonnières
 - **8 pays** représentés (France, USA, UK, Allemagne, Espagne, Italie, Japon, Brésil)
 - **Thèmes saisonniers** dynamiques (Hiver ❄️, Printemps 🌸, Été ☀️, Automne 🍂)
