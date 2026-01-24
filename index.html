@@ -3192,5 +3192,96 @@
         
         console.log('🎁 Easter Eggs activés ! Tape "VIBES" dans la recherche pour les découvrir ! 🐰');
     </script>
+    
+    <!-- Bannière d'installation iOS -->
+    <div id="iosInstallBanner" style="display: none; position: fixed; bottom: 80px; left: 10px; right: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 16px 20px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); z-index: 9999; animation: slideUp 0.5s ease-out;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="font-size: 2rem;">📱</div>
+            <div style="flex: 1;">
+                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 4px;">Installe Vibes Radio !</div>
+                <div style="font-size: 0.8rem; opacity: 0.9; line-height: 1.3;">
+                    Clique sur <span style="display: inline-flex; align-items: center; background: rgba(255, 255, 255, 0.2); padding: 2px 6px; border-radius: 4px; margin: 0 2px;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 2px;">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="12" y1="8" x2="12" y2="16"></line>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                        </svg>
+                    </span> puis "Sur l'écran d'accueil"
+                </div>
+            </div>
+            <button onclick="closeIOSBanner()" style="background: rgba(255, 255, 255, 0.2); border: none; color: white; font-size: 1.2rem; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">✕</button>
+        </div>
+    </div>
+    
+    <style>
+        @keyframes slideUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+    
+    <script>
+        // Détection iOS et affichage bannière d'installation
+        (function() {
+            // Vérifier si c'est iOS
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            
+            // Vérifier si l'app est déjà installée (mode standalone)
+            const isInstalled = window.matchMedia('(display-mode: standalone)').matches || 
+                                window.navigator.standalone === true;
+            
+            // Vérifier si l'utilisateur a déjà fermé la bannière
+            const bannerDismissed = localStorage.getItem('vibes_ios_banner_dismissed');
+            
+            // Afficher la bannière seulement si :
+            // - C'est iOS
+            // - L'app n'est pas installée
+            // - L'utilisateur n'a pas fermé la bannière
+            if (isIOS && !isInstalled && !bannerDismissed) {
+                const banner = document.getElementById('iosInstallBanner');
+                if (banner) {
+                    // Afficher après 3 secondes pour ne pas être intrusif
+                    setTimeout(() => {
+                        banner.style.display = 'block';
+                    }, 3000);
+                }
+            }
+        })();
+        
+        // Fonction pour fermer la bannière
+        function closeIOSBanner() {
+            const banner = document.getElementById('iosInstallBanner');
+            if (banner) {
+                banner.style.animation = 'slideDown 0.3s ease-out';
+                setTimeout(() => {
+                    banner.style.display = 'none';
+                }, 300);
+            }
+            // Sauvegarder que l'utilisateur a fermé la bannière
+            localStorage.setItem('vibes_ios_banner_dismissed', 'true');
+        }
+        
+        // Animation de fermeture
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideDown {
+                from {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateY(100px);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>
