@@ -1,128 +1,248 @@
-# 🎵 Vibes Radio Mobile
+# 🎵 Vibes Radio Mobile v1.6
 
-Application radio mobile progressive (PWA) avec 29 radios internationales de 8 pays.
+Application web mobile de streaming radio avec thèmes saisonniers et animations interactives.
 
-![Version](https://img.shields.io/badge/version-1.2-blue)
+![Version](https://img.shields.io/badge/version-1.6-blue)
+![Status](https://img.shields.io/badge/status-active-success)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Platform](https://img.shields.io/badge/platform-Mobile-orange)
+
+## 📱 Aperçu
+
+Vibes Radio Mobile est une application web progressive (PWA) offrant une expérience d'écoute radio immersive avec :
+- **29 radios actives** + 6 radios saisonnières
+- **8 pays** représentés (France, USA, UK, Allemagne, Espagne, Italie, Japon, Brésil)
+- **Thèmes saisonniers** dynamiques (Hiver ❄️, Printemps 🌸, Été ☀️, Automne 🍂)
+- **Section Live Radio** - Radio live animée par TheFasty_67 (à venir)
+- **8 Easter Eggs** cachés à découvrir !
 
 ## ✨ Fonctionnalités
 
-- 📻 **29 radios actives** de 8 pays
-- 🌍 **8 pays** : France, English, Allemagne, Italie, Belgique, Maroc, Espagne, Japon
-- 🎄 **6 radios saisonnières** (Noël - disponibles en décembre)
-- 🎨 **4 thèmes saisonniers** automatiques (Hiver, Printemps, Été, Automne)
-- 🎁 **8 Easter Eggs** cachés
-- ❤️ **Système de favoris** persistent
-- ⚡ **Mode Performance** (désactive les animations)
-- 📱 **PWA** : Installable comme une app native
-- 🔒 **Radios verrouillées** hors saison
-- 🎵 **Player circulaire** animé
+### 🎙️ Section Live Radio (Nouveau v1.6)
+- Page dédiée "Vibes Radio Live"
+- Animation d'intro avec thèmes saisonniers
+- Messages personnalisés par saison
+- Système de notifications par email
+- Design glassmorphism moderne
 
-## 🚀 Démo en ligne
+### 📻 Radios
+- **29 stations** actives internationales
+- **6 stations saisonnières** spéciales
+- Lecture fluide avec HTML5 Audio
+- Vinyl animé lors de la lecture
+- Système de favoris avec localStorage
 
-Accède à l'application : [https://tfasty.github.io/vibes-radio-mobile/](https://github.com/tfasty/vibes-radio-mobile)
+### 🌈 Thèmes Saisonniers
+- **4 thèmes** : Hiver, Printemps, Été, Automne
+- Changement **automatique** selon la date
+- Changement **manuel** disponible
+- Animations de fond par saison :
+  - ❄️ Flocons de neige (Hiver)
+  - 🌸 Fleurs flottantes + papillons (Printemps)
+  - ☀️ Soleil pulsant (Été)
+  - 🍂 Feuilles tourbillonnantes (Automne)
 
-## 📱 Installation
+### 🎨 Design
+- Interface **glassmorphism** élégante
+- Navigation **6 onglets** : Accueil, Player, Live, Radios, Favoris, Réglages
+- Responsive mobile-first
+- Animations fluides et modernes
+- Mode performance (désactive les particules)
 
-### En tant que PWA (Progressive Web App)
+### 🔔 Système de Notifications
+- Inscription par email
+- Popup avec validation
+- Sauvegarde localStorage
+- Détection des doublons
+- Fermeture avec Escape
+- Gradients saisonniers
 
-1. Ouvre l'application dans ton navigateur mobile
-2. Clique sur "Ajouter à l'écran d'accueil"
-3. L'app s'installera comme une application native
-
-## 🎮 Easter Eggs
-
-Découvre les 8 Easter Eggs cachés dans l'app :
-
+### 🎮 Easter Eggs
+**8 Easter Eggs cachés** à découvrir :
 1. 🎂 **Confetti Party** - Triple tap sur le logo
 2. 🌈 **Shake It** - Secoue ton téléphone 3x
 3. 🎵 **DJ Mode** - Appui long sur le vinyl (2s)
-4. 🦄 **Radio Secrète** - Swipe down 5x (page Radios)
-5. 🌈 **Rainbow Mode** - Double tap sur l'emoji saison
-6. 🎁 **Liste complète** - Tape "VIBES" dans la recherche
-7. 🎉 **Party Mode** - Double tap sur "Vibes Radio" (header)
-8. 🎮 **Konami Code** - ↑↑↓↓←→←→BA (clavier)
+4. 🦄 **Rickroll Secret** - Swipe down 5x (page Radios)
+5. 🌈 **Rainbow Mode** - Double tap saison active
+6. 🎁 **Liste** - Tape "VIBES" dans recherche
+7. 🎉 **Party Mode** - Appui long sur "Vibes Radio"
+8. 🎮 **Konami Code** - ⬆️⬆️⬇️⬇️⬅️➡️⬅️➡️ (swipe)
 
-## 📊 Statistiques
+### 👨‍💻 Mode Développeur
+- Badge "DEV" visible
+- Code secret : `Tfasty_VibesRadio_13-01_2026`
+- Accès via popup ou paramètres
 
-- **29 radios actives**
-- **6 radios saisonnières** (Noël)
-- **8 pays**
-- **8 Easter Eggs**
-- **4 thèmes saisonniers**
+## 🚀 Technologies
 
-## 🛠️ Technologies
+- **HTML5** - Structure
+- **CSS3** - Animations et glassmorphism
+- **JavaScript Vanilla** - Logique et interactions
+- **LocalStorage** - Sauvegarde données (favoris, Easter Eggs, abonnés)
+- **HTML5 Audio API** - Lecture des flux radio
+- **PWA Ready** - Manifest et service worker
 
-- HTML5
-- CSS3 (Glassmorphism, animations)
-- Vanilla JavaScript
-- Web Audio API
-- LocalStorage API
-- PWA (Service Worker ready)
+## 📦 Installation
 
-## 📻 Liste des radios
+### En ligne
+Accède directement à l'application :
+```
+https://tfasty.github.io/vibes-radio-mobile/
+```
+
+### Local
+1. Clone le repository :
+```bash
+git clone https://github.com/TheFasty/vibes-radio-mobile.git
+```
+
+2. Ouvre `index.html` dans ton navigateur
+
+3. C'est tout ! Aucune dépendance requise.
+
+## 🎯 Utilisation
+
+### Navigation
+- **Accueil** : Vue d'ensemble et statistiques
+- **Player** : Contrôles de lecture et vinyl animé
+- **Live** : Section Vibes Radio Live (Coming Soon)
+- **Radios** : Liste de toutes les stations
+- **Favoris** : Tes radios préférées
+- **Réglages** : Personnalisation et options
+
+### Fonctionnalités clés
+- **Ajouter aux favoris** : Clic sur ⭐
+- **Changer de thème** : Paramètres > Thème saisonnier
+- **Mode performance** : Paramètres > Performance
+- **Reset Easter Eggs** : Paramètres > Easter Eggs
+- **S'abonner aux notifications** : Page Live > Badge notification
+
+## 🌍 Radios Disponibles
 
 ### 🇫🇷 France (9 radios)
-FIP, Noël Radio 🔒, TSF Jazz, France Musique, FIP Electro, FIP Rock, Skyrock, FIP Groove, J-Pop Powerplay
+NRJ, Skyrock, Fun Radio, RFM, Virgin Radio, Nostalgie, Chérie FM, RTL, Europe 1
 
-### 🇬🇧 English (3 radios)
-Christmas UK 🔒, Heart Radio, Smooth FM
+### 🇺🇸 USA (7 radios)
+KIIS FM, Z100, Power 106, Hot 97, Wild 94.9, 103.5 The Beat, Q102
 
-### 🇩🇪 Allemagne (9 radios)
-I Love Chill, I Love Musique, I Love Jazz, I Love Relax, I Love Dance, I Love Rock, I Love Radio, I Love Lounge, Anime DE
+### 🇬🇧 UK (4 radios)
+BBC Radio 1, Capital FM, Kiss FM, Heart FM
 
-### 🇮🇹 Italie (4 radios)
-Natale 🔒, Radio Monte Carlo, Virgin Radio, Radio 105
+### 🇩🇪 Allemagne (3 radios)
+1LIVE, BigFM, Energy Berlin
 
-### 🇧🇪 Belgique (3 radios)
-Noël BE 🔒, Jazz Radio BE, Anime BE
+### 🇪🇸 Espagne (2 radios)
+Los 40, Cadena 100
 
-### 🇲🇦 Maroc (2 radios)
-Noël MA 🔒, Jazz MA
-
-### 🇪🇸 Espagne (4 radios)
-Navidad 🔒, Jazz ES, Los 40, Anime ES
+### 🇮🇹 Italie (2 radios)
+Radio 105, RTL 102.5
 
 ### 🇯🇵 Japon (1 radio)
-Listen.moe
+J-Wave Tokyo
 
-🔒 = Radio saisonnière (disponible uniquement en décembre)
+### 🇧🇷 Brésil (1 radio)
+Transamérica
+
+### 🎄 Saisonnières (6 radios)
+Radios spéciales activées selon la saison
+
+## 🎨 Thèmes Saisonniers
+
+### ❄️ Hiver (Décembre - Février)
+- Couleurs : Bleu/Violet
+- Animation : Flocons de neige
+- Gradient intro : `#4a5f8d → #5a3a6e`
+
+### 🌸 Printemps (Mars - Mai)
+- Couleurs : Rose/Jaune
+- Animation : Fleurs + papillons
+- Gradient intro : `#c94d6f → #c9a839`
+
+### ☀️ Été (Juin - Août)
+- Couleurs : Jaune/Cyan
+- Animation : Soleil pulsant
+- Gradient intro : `#c89225 → #1a9299`
+
+### 🍂 Automne (Septembre - Novembre)
+- Couleurs : Orange/Jaune
+- Animation : Feuilles tombantes
+- Gradient intro : `#b52a00 → #c5a41d`
 
 ## 📝 Changelog
 
+### v1.6 - 24 Janvier 2026 ⭐ ACTUELLE
+- 🎙️ Ajout section "Live Radio"
+- 🎬 Animation d'intro avec thèmes saisonniers
+- 🔔 Système de notifications fonctionnel
+- 📧 Inscription par email (localStorage)
+- 🌈 Gradients dynamiques par saison
+- 🎨 Messages "À VENIR" personnalisés
+- 🔄 Mise à jour dynamique lors changement de saison
+- 🎯 Couleurs assombries (meilleur contraste)
+- 💎 Design glassmorphism uniforme
+- ⚡ Titre "Vibes Radio Live" en blanc
+- ⌨️ Fermeture popup avec Escape
+- 💾 Sauvegarde des abonnés
+- 📱 Navigation 6 onglets
+- ✅ Cohérence visuelle totale
+
+### v1.5 - 23 Janvier 2026
+- 🐛 Correction bugs majeurs
+- 🔧 Suppression code dupliqué
+- ⚡ Optimisation performances
+- 🎯 Navigation fluide rétablie
+- ✅ Tous les Easter Eggs fonctionnels
+
+### v1.4 - 21 Janvier 2026
+- 🎨 Émojis flottants saisonniers
+- 🌈 Animations de fond pour chaque saison
+- ⚡ Optimisations diverses
+
+### v1.3 - 20 Janvier 2026
+- 📱 Détection PC/Mobile avec auto-redirect
+- 👨‍💻 Mode développeur (code secret)
+- 🎨 Animations saisonnières optimisées
+
 ### v1.2 - 19 Janvier 2026
-- 🔒 Radios saisonnières verrouillées
-- 🎁 Section "Extra" dans Paramètres
-- 🔄 Boutons de réinitialisation
-- 🔊 Sons améliorés
-- ⏭️ Skip automatique des radios verrouillées
+- 🎄 Ajout radios saisonnières
+- 🎨 Amélioration interface
+- ⚡ Optimisations performances
 
 ### v1.1 - 15 Janvier 2026
-- ✨ Page d'accueil redesignée
-- ⚡ Mode Performance
-- 🌈 Thèmes optimisés
+- 🏠 Redesign homepage
+- 📊 Ajout statistiques
+- 🎨 Amélioration design
 
 ### v1.0 - 13 Janvier 2026
 - 🎉 Lancement initial
+- 📻 29 radios actives
+- 🌍 8 pays
+- ❤️ Système de favoris
+- 🎮 8 Easter Eggs
 
-## ⚖️ Licence
+## 🤝 Contribution
+
+Les contributions sont les bienvenues ! N'hésite pas à :
+- Signaler des bugs
+- Proposer des nouvelles fonctionnalités
+- Ajouter des radios
+- Améliorer le code
+
+## 📄 Licence
 
 MIT License - Libre d'utilisation
 
 ## 👨‍💻 Auteur
 
 **TheFasty_67**
-- GitHub: [@tfasty](https://github.com/tfasty)
+- GitHub : [@TheFasty](https://github.com/TheFasty)
+- Radio : Vibes Radio Live (Coming Soon)
 
-## ⚠️ Avertissement
+## 🎉 Remerciements
 
-Les radios diffusées sont la propriété de leurs diffuseurs respectifs. Vibes Radio ne détient aucun droit sur le contenu audio.
-
-## 🙏 Remerciements
-
-Merci à tous les diffuseurs de radios pour leur contenu gratuit et accessible !
+Merci à tous les streamers et radios pour leurs flux audio !
 
 ---
 
-Made with ❤️ by TheFasty_67
+⭐ **Si tu aimes le projet, n'oublie pas de mettre une étoile !** ⭐
+
+🎵 **Bonne écoute sur Vibes Radio Mobile !** 🎵
