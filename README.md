@@ -69,7 +69,7 @@ Vibes Radio Mobile est une application web progressive (PWA) offrant une expéri
 
 ### 👨‍💻 Mode Développeur
 - Badge "DEV" visible
-- Code secret : `Tfasty_VibesRadio_13-01_2026`
+- Code secret : `Tfasty_VibesRadio***`
 - Accès via popup ou paramètres
 
 ## 🚀 Technologies
