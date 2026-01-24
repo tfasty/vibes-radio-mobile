@@ -8,7 +8,7 @@ Application web mobile de streaming radio avec thèmes saisonniers et animations
 
 ## 📱 Aperçu
 
-Vibes Radio Mobile est une application web progressive (PWA) offrant une expérience d'écoute radio immersive avec:
+Vibes Radio Mobile est une application web progressive (PWA) offrant une expérience d'écoute radio immersive avec :
 - **29 radios actives** + 6 radios saisonnières
 - **8 pays** représentés (France, USA, UK, Allemagne, Espagne, Italie, Japon, Brésil)
 - **Thèmes saisonniers** dynamiques (Hiver ❄️, Printemps 🌸, Été ☀️, Automne 🍂)
@@ -89,7 +89,29 @@ Accède directement à l'application :
 https://tfasty.github.io/vibes-radio-mobile/
 ```
 
-### Local
+### 📱 Installation sur iPhone (PWA)
+
+1. **Ouvre Safari** (obligatoire, ne fonctionne pas avec Chrome)
+2. Va sur : `https://tfasty.github.io/vibes-radio-mobile/`
+3. Clique sur le bouton **Partager** (carré avec flèche vers le haut) en bas
+4. **Scrolle vers le bas** dans le menu qui apparaît ⬇️
+5. Sélectionne **"Sur l'écran d'accueil"** (icône avec un + sur un carré)
+6. Personnalise le nom si tu veux
+7. Clique sur **"Ajouter"**
+8. L'icône apparaît sur ton écran d'accueil ! 🎉
+
+**L'app s'ouvre maintenant en plein écran sans barre Safari !**
+
+### 📱 Installation sur Android (PWA)
+
+1. **Ouvre Chrome** (recommandé)
+2. Va sur : `https://tfasty.github.io/vibes-radio-mobile/`
+3. Clique sur le menu **⋮** (3 points en haut à droite)
+4. Sélectionne **"Installer l'application"** ou **"Ajouter à l'écran d'accueil"**
+5. Confirme l'installation
+6. L'icône apparaît sur ton écran d'accueil ! 🎉
+
+### 💻 Local
 1. Clone le repository :
 ```bash
 git clone https://github.com/TheFasty/vibes-radio-mobile.git
